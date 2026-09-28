@@ -14,7 +14,6 @@ function h(tag, attrs, ...kids) {
   return el;
 }
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const F = (sub) => `F<sub>${sub}</sub>`; // label helper, e.g. F('g') -> F_g
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const pick = a => a[Math.floor(Math.random() * a.length)];
@@ -25,7 +24,7 @@ function hiDPI(canvas, w, hgt) {
   canvas.width = w * d; canvas.height = hgt * d;
   const ctx = canvas.getContext('2d'); ctx.setTransform(d, 0, 0, d, 0, 0); return ctx;
 }
-// Runs a frame loop until the element leaves the page.
+// Runs a frame loop until the element leaves the page (or fn returns false).
 function loop(el, fn) {
   let last = performance.now();
   function tick(t) {
@@ -39,8 +38,14 @@ function loop(el, fn) {
 // ---------- persistent state ----------
 const SAVE_KEY = 'inertia-quest-v1';
 function loadState() {
-  try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && typeof s.xp === 'number') return s; } catch (e) {}
-  return { xp: 0, stars: {}, sound: true };
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(SAVE_KEY)); } catch (e) {}
+  if (!s || typeof s.xp !== 'number') s = { xp: 0, stars: {}, sound: true };
+  // v2 fields: spendable wallet, inventory, equipped cosmetics, character, first free case
+  if (typeof s.wallet !== 'number') { s.wallet = s.xp; s.freeCase = true; }
+  s.inv = s.inv || {}; s.equip = s.equip || {}; s.opened = s.opened || 0;
+  s.avatar = Object.assign({}, DEFAULT_AVATAR, s.avatar || {});
+  return s;
 }
 function saveState() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(Game.state)); } catch (e) {} }
 
@@ -68,17 +73,18 @@ const SFX = {
   good: () => tone([660, 880, 1320], 0.07),
   bad: () => tone([200, 140], 0.13, 'sawtooth', 0.04),
   click: () => tone([540], 0.03, 'triangle'),
+  tick: () => tone([1200], 0.015, 'square', 0.025),
   win: () => tone([523, 659, 784, 1047, 1319, 1568], 0.09),
   boom: () => tone([120, 90, 60], 0.12, 'sawtooth', 0.06),
   whoosh: () => tone([300, 420, 560, 700], 0.05, 'triangle', 0.04),
 };
 
-// ---------- confetti ----------
-function confetti() {
+// ---------- confetti (uses the equipped confetti style) ----------
+function confetti(power = 1) {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const cv = $('#confetti'); const W = innerWidth, H = innerHeight; const ctx = hiDPI(cv, W, H);
-  const cols = ['--f-g', '--f-n', '--f-a', '--f-f', '--f-lift', '--hi', '--pen'].map(css);
-  const ps = Array.from({ length: 140 }, () => ({ x: W / 2 + (Math.random() - .5) * 200, y: H * .35, vx: (Math.random() - .5) * 700, vy: -Math.random() * 650 - 150, r: Math.random() * 6, c: pick(cols), s: 5 + Math.random() * 6 }));
+  const cols = CONFETTI[Game.state.equip.confetti] || ['--f-g', '--f-n', '--f-a', '--f-f', '--f-lift', '--hi', '--pen'].map(css);
+  const ps = Array.from({ length: Math.round(140 * power) }, () => ({ x: W / 2 + (Math.random() - .5) * 200, y: H * .35, vx: (Math.random() - .5) * 700 * power, vy: -Math.random() * 650 - 150, r: Math.random() * 6, c: pick(cols), s: 5 + Math.random() * 6 }));
   let t = 0;
   (function f() {
     t += 1 / 60; ctx.clearRect(0, 0, W, H);
@@ -87,63 +93,89 @@ function confetti() {
   })();
 }
 
-function xpPop(text, anchor) {
+function xpPop(text, anchor, cls = '') {
   const r = (anchor || $('#xp')).getBoundingClientRect();
-  const el = h('div', { class: 'xp-pop', style: `left:${clamp(r.left + r.width / 2 - 40, 8, innerWidth - 120)}px;top:${r.top - 8}px` }, text);
+  const el = h('div', { class: 'xp-pop ' + cls, style: `left:${clamp(r.left + r.width / 2 - 40, 8, innerWidth - 140)}px;top:${r.top - 8}px` }, text);
   document.body.append(el); setTimeout(() => el.remove(), 1000);
 }
 
 // ---------- game ----------
 const Game = {
-  state: loadState(),
+  state: null,
   levels: [],
   streak: 0,
   add(def) { this.levels.push(def); },
 
   hud() {
-    $('#xp').textContent = this.state.xp;
-    $('#rank').textContent = rankFor(this.state.xp);
+    const s = this.state;
+    $('#xp').textContent = s.wallet;
+    $('#rank').textContent = rankFor(s.xp);
     $('#streak').textContent = this.streak >= 3 ? `${this.streak} (x${this.mult()})` : this.streak;
     $('#streakBox').classList.toggle('hot', this.streak >= 3);
-    $('#soundBtn').textContent = 'Sound: ' + (this.state.sound ? 'on' : 'off');
-    $('#soundBtn').setAttribute('aria-pressed', this.state.sound);
+    $('#soundBtn').textContent = 'Sound: ' + (s.sound ? 'on' : 'off');
+    $('#soundBtn').setAttribute('aria-pressed', s.sound);
+    $('#meAvatar').innerHTML = avatarSVG(s.avatar, s.equip, 'head');
+    $('#meName').textContent = s.avatar.name;
+    $('#meTitle').textContent = s.equip.title ? ITEM[s.equip.title].name : rankFor(s.xp);
+    $('#shopBtn').classList.toggle('glow', !!s.freeCase || s.wallet >= CASES[0].price);
   },
   mult() { return Math.min(3, 1 + Math.floor(this.streak / 3) * 0.5); },
   award(base, anchor) {
     this.streak++;
     const gain = Math.round(base * this.mult());
-    this.state.xp += gain; saveState(); this.hud();
+    this.state.xp += gain; this.state.wallet += gain; saveState(); this.hud();
     xpPop(`+${gain} XP${this.mult() > 1 ? ' x' + this.mult() : ''}`, anchor);
     return gain;
   },
   miss() { this.streak = 0; this.hud(); },
 
   boot() {
+    this.state = loadState();
     $('#homeBtn').onclick = () => this.map();
+    $('#meBtn').onclick = () => { SFX.click(); this.character(); };
+    $('#shopBtn').onclick = () => { SFX.click(); this.shop(); };
     $('#soundBtn').onclick = () => { this.state.sound = !this.state.sound; saveState(); this.hud(); SFX.click(); };
     this.hud(); this.map();
   },
 
   map() {
     const app = $('#app'); app.innerHTML = '';
-    const total = this.levels.reduce((n, l) => n + (this.state.stars[l.id] || 0), 0);
+    const s = this.state, total = this.levels.reduce((n, l) => n + (s.stars[l.id] || 0), 0);
+    const owned = ITEMS.filter(i => s.inv[i.id]).length;
+    const station = (l, i) => {
+      const st = s.stars[l.id] || 0;
+      return h('button', { class: 'station' + (l.boss ? ' boss' : '') + (l.section === 'extra' ? ' extra' : ''), onclick: () => { SFX.click(); this.play(i); } },
+        h('span', { class: 'tag' }, h('span', {}, l.tag), h('span', { class: 'stars', html: starHTML(st) })),
+        h('h2', {}, l.title), h('p', {}, l.blurb));
+    };
+    const section = (key, title, sub) => [
+      h('div', { class: 'sec-head' }, h('h2', {}, title), h('p', {}, sub)),
+      h('div', { class: 'grid' }, this.levels.map((l, i) => (l.section || 'main') === key ? station(l, i) : null)),
+    ];
     app.append(
       h('section', { class: 'hero' },
         h('div', {},
           h('h1', { html: 'Forces, FBDs &amp; the <em>First Law</em>' }),
-          h('p', {}, 'Every station is one question from your quiz review, turned into a mini-game. Build free body diagrams, cut the Moon loose, crash-test a dummy, and heave Terry\'s box onto the shelf. Beat the Final Boss when you\'re ready.'),
+          h('p', {}, 'Every station is one question from your quiz review, turned into a mini-game. Earn XP, crack open cases for cosmetics, and dress up your character. Beat the Final Boss when you\'re ready.'),
           h('p', { class: 'mono' }, `Stars: ${total} / ${this.levels.length * 3}`)),
-        h('aside', { class: 'cheat' },
-          h('h3', {}, 'Cheat sheet'),
-          h('div', { class: 'eq', html: `F<sub>net</sub> = F<sub>1</sub> + F<sub>2</sub> + ...<br>F<sub>g</sub> = m &middot; g<br>g = -10 N/kg (Earth)` }),
-          h('small', {}, 'Up and right are +. Down and left are -. Show: equation, values plugged in, answer with units.'),
-          h('div', { class: 'legend', html: Object.entries(FORCES).map(([k, f]) => `<span style="color:var(${f.c})">${f.label}</span>`).join('') }))),
-      h('div', { class: 'grid' }, this.levels.map((l, i) => {
-        const s = this.state.stars[l.id] || 0;
-        return h('button', { class: 'station' + (l.boss ? ' boss' : ''), onclick: () => { SFX.click(); this.play(i); } },
-          h('span', { class: 'tag' }, h('span', {}, l.tag), h('span', { class: 'stars', html: starHTML(s) })),
-          h('h2', {}, l.title), h('p', {}, l.blurb));
-      })));
+        h('div', { class: 'player' },
+          h('button', { class: 'player-av', onclick: () => this.character(), 'aria-label': 'Customize character', html: avatarSVG(s.avatar, s.equip) }),
+          h('div', { class: 'player-info' },
+            h('b', { class: 'pname' }, s.avatar.name),
+            h('span', { class: 'ptitle' }, s.equip.title ? `"${ITEM[s.equip.title].name}"` : rankFor(s.xp)),
+            h('span', { class: 'mono' }, `Rank: ${rankFor(s.xp)}`),
+            h('span', { class: 'mono' }, `XP to spend: ${s.wallet}`),
+            h('span', { class: 'mono' }, `Collection: ${owned} / ${ITEMS.length}`),
+            h('div', { class: 'row' },
+              h('button', { class: 'btn small', onclick: () => this.character() }, 'Customize'),
+              h('button', { class: 'btn small primary', onclick: () => this.shop() }, s.freeCase ? 'Free case!' : 'Open cases'))))),
+      h('aside', { class: 'cheat' },
+        h('div', { class: 'eq', html: `<b>Cheat sheet</b> &nbsp; F<sub>net</sub> = F<sub>1</sub> + F<sub>2</sub> + ... &nbsp;&nbsp; F<sub>g</sub> = m &middot; g &nbsp;&nbsp; g = -10 N/kg (Earth)` }),
+        h('small', {}, 'Up and right are +. Down and left are -. Show: equation, values plugged in, answer with units.'),
+        h('div', { class: 'legend', html: Object.entries(FORCES).map(([k, f]) => `<span style="color:var(${f.c})">${f.label}</span>`).join('') })),
+      ...section('main', 'Quiz Review', 'Questions 1-9 from the first review sheet.'),
+      ...section('extra', 'Extra Practice', 'From the extra review sheet: Mr. C\'s desk, the Mars platypus, and Magnus\'s barbell.'),
+      ...section('boss', 'Final Boss', 'Random questions from everything above.'));
     scrollTo(0, 0);
   },
 
@@ -183,22 +215,25 @@ const Game = {
   },
 
   finish(index, run, body) {
-    const def = this.levels[index];
+    const def = this.levels[index], s = this.state;
     const stars = def.boss ? run.hearts : run.mistakes === 0 ? 3 : run.mistakes <= 2 ? 2 : 1;
-    const prev = this.state.stars[def.id] || 0;
-    if (stars > prev) this.state.stars[def.id] = stars;
+    if (stars > (s.stars[def.id] || 0)) s.stars[def.id] = stars;
     saveState(); SFX.win(); confetti();
+    const lost = def.boss && run.hearts === 0;
     const lines = def.boss
-      ? (run.hearts > 0 ? 'Boss defeated. You know your forces.' : 'The Boss wins this round. Replay a station, then try again.')
+      ? (lost ? 'The Boss wins this round. Replay a station, then try again.' : 'Boss defeated. You know your forces.')
       : run.mistakes === 0 ? 'Flawless. Zero mistakes.' : `${run.mistakes} mistake${run.mistakes > 1 ? 's' : ''}. Replay for 3 stars.`;
+    const say = lost ? 'We\'ll get \'em next time.' : stars === 3 ? 'Flawless!' : stars === 2 ? 'Nice work!' : 'Progress is progress!';
     body.innerHTML = '';
     body.append(h('section', { class: 'step result' },
-      h('h2', {}, def.boss && run.hearts === 0 ? 'Game over' : 'Station cleared!'),
+      h('div', { class: 'celebrate' }, h('div', { class: 'bubble' }, say), h('div', { class: 'cel-av', html: avatarSVG(s.avatar, s.equip) })),
+      h('h2', {}, lost ? 'Game over' : 'Station cleared!'),
       h('div', { class: 'bigstars', html: starHTML(stars) }),
-      h('p', {}, lines), h('p', { class: 'mono' }, `+${run.xp} XP this run`),
+      h('p', {}, lines), h('p', { class: 'mono' }, `+${run.xp} XP this run. You have ${s.wallet} XP to spend.`),
       h('div', { class: 'row', style: 'justify-content:center' },
         h('button', { class: 'btn', onclick: () => this.play(index) }, 'Replay'),
         index + 1 < this.levels.length ? h('button', { class: 'btn primary', onclick: () => this.play(index + 1) }, 'Next station >') : null,
+        h('button', { class: 'btn', onclick: () => this.shop() }, 'Open cases'),
         h('button', { class: 'btn', onclick: () => this.map() }, 'Map'))));
   },
 };

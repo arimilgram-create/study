@@ -1,12 +1,16 @@
 // Inertia Quest — reusable question widgets. Each takes (el, api, cfg).
 
 // SVG arrow with arrowhead and an F-sub label. color is a CSS var name like '--f-g'.
-function arrowSVG(x1, y1, x2, y2, color, sub, lx, ly, w = 5) {
-  const a = Math.atan2(y2 - y1, x2 - x1), L = 14, s = 8;
+function arrowSVG(x1, y1, x2, y2, color, sub, lx, ly, w = 5, skin) {
+  if (skin === undefined) skin = Game.state && Game.state.equip.arrow; // cosmetic arrow skin
+  const big = skin === 'a_thick' || skin === 'a_plasma'; if (big) w += 3;
+  const a = Math.atan2(y2 - y1, x2 - x1), L = big ? 18 : 14, s = big ? 11 : 8;
   const bx = x2 - Math.cos(a) * L, by = y2 - Math.sin(a) * L;
   const p = [[x2, y2], [bx - Math.sin(a) * s, by + Math.cos(a) * s], [bx + Math.sin(a) * s, by - Math.cos(a) * s]];
   const label = sub == null ? '' : `<text x="${lx}" y="${ly}" style="fill:var(${color});font:700 17px var(--mono)">F<tspan dy="5" style="font-size:12px">${sub}</tspan></text>`;
-  return `<g><line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" style="stroke:var(${color})" stroke-width="${w}" stroke-linecap="round"/>` +
+  const fx = skin === 'a_glow' || skin === 'a_plasma' ? ' filter="url(#fxGlow)"' : '';
+  const dash = skin === 'a_laser' ? ' stroke-dasharray="9 6" class="laser"' : '';
+  return `<g${skin === 'a_plasma' ? ' class="plasma"' : ''}${fx}><line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" style="stroke:var(${color})" stroke-width="${w}" stroke-linecap="round"${dash}/>` +
     `<polygon points="${p.map(q => q.join(',')).join(' ')}" style="fill:var(${color})"/>${label}</g>`;
 }
 
@@ -32,11 +36,15 @@ function feedback(el) {
   return html => { fb.hidden = !html; fb.innerHTML = html || ''; fb.style.animation = 'none'; void fb.offsetWidth; fb.style.animation = ''; };
 }
 
+const REVEAL = '<b>Two tries used.</b>';
+const ONE_MORE = '<br><i>One more try, then I\'ll show you the answer.</i>';
+
 // Multiple choice. opts: [{t, ok, why, svg}]
 function MCQ(el, api, cfg) {
   stepHead(el, cfg);
   const opts = cfg.keepOrder ? cfg.opts : shuffle(cfg.opts);
   const box = h('div', { class: 'opts' }); el.append(box);
+  let wrongs = 0;
   const say = feedback(el);
   const buttons = opts.map(o => {
     const b = h('button', { class: 'opt', html: (o.svg || '') + `<span>${o.t}</span>` });
@@ -45,12 +53,13 @@ function MCQ(el, api, cfg) {
         b.classList.add('right'); buttons.forEach(x => x.disabled = true); say('');
         api.right(cfg.xp || 10, b); api.done(cfg.explain);
       } else {
-        b.classList.add('wrong'); b.disabled = true; api.wrong(b);
-        say(o.why || 'Not quite. Try another one.');
-        if (cfg.oneShot) {
-          buttons.forEach((x, i) => { x.disabled = true; if (opts[i].ok) x.classList.add('right'); });
+        b.classList.add('wrong'); b.disabled = true; api.wrong(b); wrongs++;
+        const why = o.why || 'Not quite.';
+        if (cfg.oneShot || wrongs >= 2) { // reveal after two tries
+          buttons.forEach((x, i) => { x.disabled = true; if (opts[i].ok) x.classList.add('right', 'reveal'); });
+          say(why + (cfg.oneShot ? '' : `<br>${REVEAL} The right answer is highlighted in green.`));
           api.done(cfg.explain);
-        }
+        } else say(why + ONE_MORE);
       }
     };
     box.append(b); return b;
@@ -82,11 +91,11 @@ function NUM(el, api, cfg) {
     if (cfg.ans !== 0 && Math.abs(-v - cfg.ans) <= tol) msg = cfg.signMsg || 'Right size, wrong sign! Down and left are negative. Up and right are positive.';
     else if (cfg.ans !== 0 && (Math.abs(v * 10 - cfg.ans) <= tol || Math.abs(v / 10 - cfg.ans) <= tol || Math.abs(-v * 10 - cfg.ans) <= tol || Math.abs(-v / 10 - cfg.ans) <= tol)) msg = 'Off by a factor of 10. Did you multiply by g = -10 N/kg?';
     else msg = cfg.hint || 'Not yet. Write the equation, plug in the values, then solve.';
-    if (tries >= 3 || cfg.oneShot) {
-      msg += `<br>The answer is <b>${cfg.ans} ${cfg.unit || 'N'}</b>.`;
+    if (tries >= 2 || cfg.oneShot) {
+      msg += `<br>${cfg.oneShot ? '' : REVEAL} The answer is <b>${cfg.ans} ${cfg.unit || 'N'}</b>.`;
       inp.disabled = go.disabled = flip.disabled = true; say(msg); api.done(cfg.explain); return;
     }
-    say(msg);
+    say(msg + ONE_MORE);
   }
 }
 
@@ -100,7 +109,7 @@ const DIRS = {
 function FBD(el, api, cfg) {
   stepHead(el, cfg);
   const placed = { up: null, down: null, left: null, right: null };
-  let sel = null, locked = false;
+  let sel = null, locked = false, fails = 0;
   const svg = h('div', { html: `<svg viewBox="0 0 360 300" role="group" aria-label="Free body diagram. Choose a force, then tap a direction.">
     <g class="scene">${cfg.scene}</g><circle cx="180" cy="150" r="4" style="fill:var(--ink)"/>
     ${Object.entries(DIRS).map(([k, d]) => `<g class="zone" data-dir="${k}" tabindex="0" role="button" aria-label="${k} slot">
@@ -157,9 +166,16 @@ function FBD(el, api, cfg) {
       else if (got && !need.includes(got)) { bad = true; problems.push(`${FORCES[got].label} doesn't point <b>${k}</b> here.`); }
       if (bad) svg.querySelector(`[data-dir="${k}"]`).classList.add('badz');
     }
-    if (problems.length) { api.wrong(svg); say(problems.join('<br>') + (cfg.hint ? '<br>' + cfg.hint : '')); return; }
+    if (problems.length) {
+      api.wrong(svg);
+      if (++fails < 2) { say(problems.join('<br>') + (cfg.hint ? '<br>' + cfg.hint : '') + ONE_MORE); return; }
+      for (const k in DIRS) placed[k] = (cfg.need[k] || [])[0] || null; // reveal the correct FBD
+      draw(); lock(); say(`${REVEAL} Here is the correct free body diagram. Study it, then keep going.`); api.done(cfg.explain); return;
+    }
+    lock(); say(''); api.right(cfg.xp || 20, check); api.done(cfg.explain);
+  }
+  function lock() {
     locked = true; check.disabled = reset.disabled = true; chipEls.forEach(c => c.disabled = true); sel = null; paint();
-    say(''); api.right(cfg.xp || 20, check); api.done(cfg.explain);
   }
   draw();
 }
@@ -199,4 +215,45 @@ function SORT(el, api, cfg) {
     }, ok ? 120 : 1200);
   }
   show();
+}
+
+// Rank items least -> greatest with < or = between neighbors. items: [{k, t, v}]; any order within ties counts.
+function RANK(el, api, cfg) {
+  stepHead(el, cfg);
+  let seq = [], signs = [], fails = 0, locked = false;
+  const pool = h('div', { class: 'rank-pool' }), row = h('div', { class: 'rank-row', 'aria-live': 'polite' });
+  el.append(h('div', { class: 'hint' }, 'Tap the items from least to greatest. Tap a sign to switch between < and =. Tap a placed letter to take it back.'), pool,
+    h('div', { class: 'rank-label' }, 'least', h('span'), 'greatest'), row);
+  const say = feedback(el);
+  const check = h('button', { class: 'btn primary', onclick: doCheck }, 'Check order');
+  const clear = h('button', { class: 'btn', onclick: () => { seq = []; signs = []; draw(); } }, 'Clear');
+  el.append(h('div', { class: 'row' }, check, clear));
+  function draw() {
+    pool.innerHTML = ''; row.innerHTML = '';
+    cfg.items.forEach(it => pool.append(h('button', {
+      class: 'rank-card', disabled: locked || seq.includes(it),
+      onclick: () => { seq.push(it); if (seq.length > 1) signs.push('<'); SFX.click(); say(''); draw(); },
+    }, h('b', {}, it.k), h('span', { html: it.t }))));
+    seq.forEach((it, i) => {
+      if (i) row.append(h('button', { class: 'rank-sign', disabled: locked, 'aria-label': 'switch sign', onclick: () => { signs[i - 1] = signs[i - 1] === '<' ? '=' : '<'; SFX.click(); draw(); } }, signs[i - 1]));
+      row.append(h('button', { class: 'rank-slot', disabled: locked, title: it.t.replace(/<[^>]+>/g, ''), onclick: () => { seq.splice(i, 1); signs.splice(Math.max(0, i - 1), 1); draw(); } }, it.k));
+    });
+    if (!seq.length) row.append(h('span', { class: 'hint' }, 'Your order shows up here.'));
+    check.disabled = locked || seq.length !== cfg.items.length;
+  }
+  function doCheck() {
+    let bad = null;
+    for (let i = 1; i < seq.length && !bad; i++) {
+      const a = seq[i - 1], b = seq[i], sg = signs[i - 1];
+      if (sg === '<' ? a.v < b.v : a.v === b.v) continue;
+      bad = `<b>${a.k} ${sg} ${b.k}</b> isn't right: ` + (a.v === b.v ? `${a.k} and ${b.k} are equal.` : a.v < b.v ? `${a.k} is less than ${b.k}.` : `${a.k} is greater than ${b.k}.`);
+    }
+    if (!bad) { locked = true; draw(); say(''); api.right(cfg.xp || 30, check); api.done(cfg.explain); return; }
+    api.wrong(row);
+    if (++fails < 2) { say(bad + ONE_MORE); return; }
+    seq = cfg.items.slice().sort((a, b) => a.v - b.v);
+    signs = seq.slice(1).map((b, i) => seq[i].v === b.v ? '=' : '<');
+    locked = true; draw(); say(`${bad}<br>${REVEAL} Here's the correct order.`); api.done(cfg.explain);
+  }
+  draw();
 }

@@ -19,6 +19,10 @@ const BOSS_GENS = [
   () => ({ mcq: { q: 'A kicked soccer ball rolls across the grass and slows down. Why?', opts: [{ t: 'Friction acts opposite its motion, an unbalanced force', ok: true }, { t: 'The kick force runs out', why: 'The kick force only acted during contact.' }, { t: 'Its inertia wears off', why: 'Inertia never wears off. It depends on mass.' }, { t: 'Objects naturally stop', why: 'Only when a force stops them.' }], explain: 'Slowing down = changing velocity = unbalanced force.' } }),
   () => ({ mcq: { q: 'A car drives around a curve at a constant 30 mph. Is the net force zero?', opts: [{ t: 'No. Its direction is changing, so its velocity is changing.', ok: true }, { t: 'Yes. Its speed is constant.', why: 'Constant velocity needs constant speed AND a straight-line direction.' }, { t: 'Yes. Cars always have balanced forces.', why: 'Turning is a change in velocity, which needs an unbalanced force (friction toward the center).' }, { t: 'Only if it has seatbelts', why: 'Seatbelts act on passengers, not the whole car.' }], explain: 'Like the Moon and the speed skater: curving needs a force.' } }),
   () => ({ num: { q: 'Terry lifts a 23.5 kg box upward at constant velocity. What is Terry\'s applied force?', ans: 235, unit: 'N', signMsg: 'Right size! Terry lifts up, so it\'s positive.', explain: eqs('0 N = F<sub>A</sub> + (-235 N)', 'F<sub>A</sub> = 235 N') } }),
+  () => ({ num: { q: 'Mr. C pushes his desk, but 350 N of friction keeps it from moving. How hard is he pushing?', ans: 350, unit: 'N', signMsg: 'Right size! His push points forward, so it\'s positive.', explain: eqs('0 = F<sub>A</sub> + (-350 N)', 'F<sub>A</sub> = 350 N') } }),
+  () => { const m = pick([8, 20, 50, 90]), w = +(-3.7 * m).toFixed(1); return { num: { q: `What does a ${m} kg object weigh on Mars (g = -3.7 N/kg)?`, ans: w, tol: 0.2, unit: 'N', explain: eqs('F<sub>g</sub> = m &middot; g', `F<sub>g</sub> = ${m} kg &middot; (-3.7 N/kg)`, `F<sub>g</sub> = ${w} N`) } }; },
+  () => ({ mcq: { q: 'On Mars (g = -3.7 N/kg), you swap a 90 kg person on the scale for an 8 kg platypus. What is g now?', opts: [{ t: '-3.7 N/kg', ok: true }, { t: '-29.6 N/kg', why: 'That\'s the platypus\'s weight in N.' }, { t: '-10 N/kg', why: 'That\'s Earth.' }, { t: 'It depends on the platypus', why: 'g is set by the location, not the object.' }], explain: 'The field is determined by location, not the object placed there.' } }),
+  () => ({ mcq: { q: 'Magnus lowers a barbell and it speeds up on the way down (but slower than a drop). His applied force is...', opts: [{ t: 'Less than the weight, but more than zero', ok: true }, { t: 'Equal to the weight', why: 'Then it would move at constant velocity.' }, { t: 'More than the weight', why: 'Then the net force would point up and it would slow down.' }, { t: 'Zero', why: 'That would be dropping it.' }], explain: 'Speeding up downward means F<sub>A</sub> < |F<sub>g</sub>|, but he still pushes up some.' } }),
 ];
 
 let bossDeck = [];
@@ -57,7 +61,7 @@ function bossStep(k) {
   };
 }
 Game.add({
-  id: 'boss', boss: true, tag: 'Final Boss', title: 'Newton\'s Final Exam',
+  id: 'boss', boss: true, section: 'boss', tag: 'Final Boss', title: 'Newton\'s Final Exam',
   blurb: '10 random rapid-fire questions from every station. 25 seconds each. Three hearts. Faster answers earn bonus XP.',
   steps: Array.from({ length: 10 }, (_, k) => bossStep(k)),
 });
