@@ -1,0 +1,197 @@
+<title>Inertia Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bungee&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: graph-paper lab notebook; sticky arcade HUD; station grid that opens into a one-column level stage.
+   Teacher-purple handwriting = feedback (like the answer key). Each force keeps one color everywhere. */
+:root{
+  --paper:#f3f6f2; --grid:rgba(38,108,150,.10); --ink:#18212d; --muted:#586472; --card:#ffffff;
+  --line:#d3dbd8; --edge:#18212d; --shade:#18212d; --hi:#ffe14d; --on-hi:#18212d;
+  --pen:#a41fd0; --good:#18864b; --bad:#d9362b; --accent:#1f6feb; --soft:#eef3f7;
+  --f-g:#d9362b; --f-n:#1c6fd1; --f-a:#e67700; --f-f:#b3246b; --f-air:#0b7f8f; --f-lift:#2b8a3e; --f-eng:#9c6500; --f-s:#5f3dc4;
+  --display:"Bungee","Arial Black",Impact,sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --hand:"Caveat","Segoe Print","Comic Sans MS",cursive;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#111920; --grid:rgba(140,190,230,.07); --ink:#e9eef3; --muted:#9aa6b4; --card:#1a2430;
+  --line:#2e3b49; --edge:#5d6e82; --shade:#04070a; --hi:#ffd43b; --on-hi:#18212d;
+  --pen:#d68cff; --good:#45c47b; --bad:#ff6b61; --accent:#5aa2ff; --soft:#202c3a;
+  --f-g:#ff6b61; --f-n:#5aa2ff; --f-a:#ffa94d; --f-f:#f06595; --f-air:#3bc9db; --f-lift:#69db7c; --f-eng:#e0a841; --f-s:#9775fa;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#111920; --grid:rgba(140,190,230,.07); --ink:#e9eef3; --muted:#9aa6b4; --card:#1a2430;
+  --line:#2e3b49; --edge:#5d6e82; --shade:#04070a; --hi:#ffd43b; --on-hi:#18212d;
+  --pen:#d68cff; --good:#45c47b; --bad:#ff6b61; --accent:#5aa2ff; --soft:#202c3a;
+  --f-g:#ff6b61; --f-n:#5aa2ff; --f-a:#ffa94d; --f-f:#f06595; --f-air:#3bc9db; --f-lift:#69db7c; --f-eng:#e0a841; --f-s:#9775fa;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper); color:var(--ink); font:17px/1.5 var(--body);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px; min-height:100vh;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.1;text-wrap:balance;margin:0}
+sub{font-size:.7em}
+.eq,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* HUD */
+.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--card);border-bottom:2px solid var(--edge);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;flex-wrap:wrap}
+.logo{border:0;background:none;font-family:var(--display);font-size:1.25rem;padding:0;letter-spacing:.02em}
+.logo span{background:var(--hi);color:var(--on-hi);padding:0 .25em;margin-left:.2em;border-radius:4px}
+.hud-stats{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+.stat .k{font-size:.66rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.stat b{font-family:var(--mono);font-size:1rem}
+.stat.hot b{color:var(--f-a)}
+.icon-btn{border:2px solid var(--edge);background:var(--soft);border-radius:999px;padding:3px 10px;font-size:.8rem}
+
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:22px 60px}
+
+/* Buttons */
+.btn{border:2px solid var(--edge);background:var(--card);border-radius:12px;padding:10px 16px;font-weight:700;
+  box-shadow:0 3px 0 var(--shade);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--shade)}
+.btn.primary{background:var(--hi);color:var(--on-hi)}
+.btn.small{padding:6px 12px;font-size:.9rem}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.on{background:var(--ink);color:var(--card)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* Map */
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;align-items:start;margin-bottom:26px}
+.hero h1{font-size:clamp(2.1rem,6vw,3.6rem)}
+.hero h1 em{font-style:normal;color:var(--pen)}
+.hero p{max-width:60ch;color:var(--muted);margin:.6em 0 0}
+.cheat{background:var(--card);border:2px solid var(--edge);border-radius:var(--r);padding:14px 16px;box-shadow:4px 4px 0 var(--shade)}
+.cheat h3{font-size:.85rem;letter-spacing:.06em;margin-bottom:8px}
+.cheat .eq{display:block;font-size:1rem;line-height:1.8}
+.cheat small{display:block;color:var(--muted);margin-top:8px;font-size:.85rem}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.legend span{font-family:var(--mono);font-size:.8rem;border:2px solid currentColor;border-radius:999px;padding:0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.station{text-align:left;border:2px solid var(--edge);background:var(--card);border-radius:var(--r);padding:14px 16px;
+  box-shadow:4px 4px 0 var(--shade);display:flex;flex-direction:column;gap:6px;transition:transform .12s}
+.station:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--shade)}
+.station .tag{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;color:var(--muted);display:flex;justify-content:space-between}
+.station h2{font-size:1.2rem}
+.station p{margin:0;color:var(--muted);font-size:.93rem}
+.stars{color:var(--f-a);letter-spacing:.1em;font-size:1rem}
+.stars .off{color:var(--line)}
+.station.boss{grid-column:1/-1;background:var(--ink);color:var(--card)}
+.station.boss p,.station.boss .tag{color:var(--line)}
+.station.boss h2{font-size:1.6rem;color:var(--hi)}
+
+/* Level stage */
+.lvl-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.lvl-head h2{font-size:clamp(1.3rem,4vw,1.9rem);flex:1;min-width:0}
+.lvl-head .tag{font-family:var(--mono);font-size:.8rem;background:var(--hi);color:var(--on-hi);padding:2px 8px;border-radius:6px}
+.dots{display:flex;gap:6px}
+.dots i{width:12px;height:12px;border-radius:50%;border:2px solid var(--edge);background:var(--card)}
+.dots i.done{background:var(--good);border-color:var(--good)}
+.dots i.now{background:var(--hi)}
+.step{background:var(--card);border:2px solid var(--edge);border-radius:var(--r);padding:18px;box-shadow:5px 5px 0 var(--shade);
+  display:flex;flex-direction:column;gap:14px;animation:pop .25s ease-out}
+.step .q{font-size:1.1rem;font-weight:700;max-width:65ch}
+.step .ctx{color:var(--muted);max-width:65ch;margin:0}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.opt{text-align:left;border:2px solid var(--edge);background:var(--soft);border-radius:12px;padding:10px 12px;min-width:0}
+.opt:hover:not(:disabled){background:var(--hi);color:var(--on-hi)}
+.opt.right{background:var(--good);color:#fff;border-color:var(--good)}
+.opt.wrong{background:transparent;border-style:dashed;color:var(--muted);text-decoration:line-through}
+.opt svg{display:block;width:100%;max-width:170px;height:auto;margin-bottom:4px}
+.num-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.num-row input{font:700 1.2rem var(--mono);width:9em;max-width:100%;padding:8px 10px;border:2px solid var(--edge);border-radius:10px;background:var(--paper);color:var(--ink)}
+.unit{font-family:var(--mono);font-weight:700}
+.pen{font-family:var(--hand);color:var(--pen);font-size:1.45rem;line-height:1.25;max-width:65ch;animation:write .4s ease-out}
+.pen.bad{color:var(--bad)}
+.pen .eq{font-family:var(--hand);font-size:1.5rem;display:block;padding-left:1em}
+.next-row{display:flex;justify-content:flex-end}
+.hint{font-size:.9rem;color:var(--muted)}
+
+/* FBD builder */
+.fbd{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start}
+.fbd svg{width:100%;height:auto;background:var(--soft);border-radius:12px;border:2px solid var(--line);touch-action:manipulation}
+.zone{cursor:pointer}
+.zone rect{fill:transparent;stroke:var(--muted);stroke-dasharray:6 5;stroke-width:2}
+.armed .zone rect{stroke:var(--accent);fill:rgba(31,111,235,.08);animation:pulse 1s infinite}
+.zone.badz rect{stroke:var(--bad);fill:rgba(217,54,43,.10);stroke-dasharray:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--c);border-radius:999px;padding:5px 12px;background:var(--card);display:flex;gap:6px;align-items:baseline;text-align:left}
+.chip b{font-family:var(--mono);color:var(--c)}
+.chip small{color:var(--muted);font-size:.8rem}
+.chip.sel{background:var(--c);}
+.chip.sel b,.chip.sel small{color:#fff}
+
+/* Sorting game */
+.sorter{display:flex;flex-direction:column;align-items:center;gap:14px}
+.card-deck{position:relative;width:min(100%,420px);min-height:130px}
+.sort-card{position:absolute;inset:0;background:var(--paper);border:2px solid var(--edge);border-radius:14px;padding:18px;
+  display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;font-size:1.2rem;box-shadow:0 4px 0 var(--shade)}
+.sort-card.fly-l{animation:flyL .35s forwards}.sort-card.fly-r{animation:flyR .35s forwards}
+.bins{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(100%,420px)}
+.bins .btn{font-family:var(--display);font-weight:400;font-size:1.1rem;padding:14px 8px}
+.meter{width:min(100%,420px);height:10px;border:2px solid var(--edge);border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--good);transition:width .3s}
+
+/* Sims */
+.sim{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.sim.one{grid-template-columns:minmax(0,1fr)}
+.panel{background:var(--soft);border:2px solid var(--line);border-radius:12px;padding:10px;min-width:0}
+.panel canvas,.panel svg{display:block;width:100%;height:auto}
+.readout{font-family:var(--mono);font-size:.95rem;display:flex;flex-direction:column;gap:2px}
+.readout .big{font-size:1.3rem;font-weight:700}
+.goal{border:2px dashed var(--edge);border-radius:10px;padding:8px 12px;font-size:.95rem}
+.goal.met{border-style:solid;border-color:var(--good);color:var(--good)}
+input[type=range]{width:100%;accent-color:var(--f-a)}
+
+/* Result + boss */
+.result{text-align:center;align-items:center}
+.result .bigstars{font-size:3rem;color:var(--f-a);letter-spacing:.15em}
+.result .bigstars .off{color:var(--line)}
+.hearts{font-size:1.3rem;color:var(--bad);letter-spacing:.1em}
+.timer{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.timer i{display:block;height:100%;background:var(--f-a);width:100%}
+
+.xp-pop{position:fixed;z-index:50;font:700 1.1rem var(--mono);color:var(--good);pointer-events:none;animation:rise 1s ease-out forwards;
+  background:var(--card);border:2px solid var(--good);border-radius:8px;padding:2px 8px}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+.shake{animation:shake .35s}
+
+@keyframes pop{from{transform:scale(.98);opacity:.6}to{transform:none;opacity:1}}
+@keyframes write{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes pulse{50%{stroke-opacity:.35}}
+@keyframes rise{to{transform:translateY(-50px);opacity:0}}
+@keyframes shake{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
+@keyframes flyL{to{transform:translateX(-140%) rotate(-18deg);opacity:0}}
+@keyframes flyR{to{transform:translateX(140%) rotate(18deg);opacity:0}}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition:none!important}}
+@media (max-width:720px){ .hero,.fbd,.sim{grid-template-columns:minmax(0,1fr)} body{font-size:16px} .step{padding:14px} }
+</style>
+
+<header class="hud">
+  <button class="logo" id="homeBtn" aria-label="Back to station map">Inertia<span>Quest</span></button>
+  <div class="hud-stats">
+    <div class="stat"><span class="k">XP</span><b id="xp">0</b></div>
+    <div class="stat"><span class="k">Rank</span><b id="rank">At Rest</b></div>
+    <div class="stat" id="streakBox"><span class="k">Streak</span><b id="streak">0</b></div>
+    <button id="soundBtn" class="icon-btn" aria-pressed="true">Sound: on</button>
+  </div>
+</header>
+<main id="app" class="wrap"></main>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script src="js/core.js"></script>
+<script src="js/widgets.js"></script>
+<script src="js/levels-a.js"></script>
+<script src="js/levels-b.js"></script>
+<script src="js/levels-c.js"></script>
+<script src="js/boss.js"></script>
+<script>Game.boot();</script>
