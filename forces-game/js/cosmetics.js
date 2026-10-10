@@ -64,6 +64,28 @@ const ITEMS = [
   { id: 'bg_space', slot: 'bg', r: 'rare', name: 'Deep Space', d: 'No friction out here.' },
   { id: 'bg_sunset', slot: 'bg', r: 'epic', name: 'Sunset', d: 'Golden hour.' },
   { id: 'bg_aurora', slot: 'bg', r: 'legendary', name: 'Aurora', d: 'Northern lights.' },
+  // unit 2: balanced forces & constant velocity
+  { id: 'headband', slot: 'hat', r: 'common', name: 'Racing Headband', d: 'CeeCee wears it. 1.25x faster (not really).', set: 'v' },
+  { id: 'captain', slot: 'hat', r: 'rare', name: 'Captain\'s Hat', d: 'Jayla\'s. Constant 15 m/s across the lake.', set: 'v' },
+  { id: 'catears', slot: 'hat', r: 'epic', name: 'Tom\'s Cat Ears', d: '4.5 kg of attitude. -45 N on Earth.', set: 'v' },
+  { id: 'rockethat', slot: 'hat', r: 'legendary', name: 'Shuttle Hat', d: '7000 m/s. Moon in 54,857 s.', set: 'v' },
+  { id: 'tracksuit', slot: 'outfit', r: 'rare', name: 'Track Suit', d: 'Built for constant velocity.', set: 'v' },
+  { id: 'sailor', slot: 'outfit', r: 'epic', name: 'Boat Captain Uniform', d: 'F<sub>engine</sub> = |F<sub>f</sub>|. Smooth sailing.', set: 'v' },
+  { id: 'checker', slot: 'outfit', r: 'legendary', name: 'Finish Line Suit', d: 'Checkered. Fast. Balanced.', set: 'v' },
+  { id: 'soccer', slot: 'pet', r: 'common', name: 'Soccer Ball', d: 'Rolls to the back of the truck. Inertia.', set: 'v' },
+  { id: 'cartpet', slot: 'pet', r: 'rare', name: 'Shopping Cart', d: '3 m/s on the lot, 0.5 m/s on the grass.', set: 'v' },
+  { id: 'rccar', slot: 'pet', r: 'rare', name: 'RC Car', d: 'Displacement -1 m. Distance 11 m.', set: 'v' },
+  { id: 'tom', slot: 'pet', r: 'epic', name: 'Tom the Cat', d: 'Weighs -2.835 N on Pluto. Still judges you.', set: 'v' },
+  { id: 'boatpet', slot: 'pet', r: 'legendary', name: 'Jayla\'s Boat', d: '600 m in 40 s.', set: 'v' },
+  { id: 'shuttle', slot: 'pet', r: 'mythic', name: 'Space Shuttle', d: 'Enid\'s ride. 384,000,000 m to go.', set: 'v' },
+  { id: 't_eq', slot: 'title', r: 'common', name: 'Equation Writer', d: 'Equation first. Every time.', set: 'v' },
+  { id: 't_slope', slot: 'title', r: 'common', name: 'Slope Reader', d: 'Steep = fast. Downhill = negative.', set: 'v' },
+  { id: 't_lock', slot: 'title', r: 'rare', name: 'Locked In', d: 'Equation, plug in, answer with units.', set: 'v' },
+  { id: 't_disp', slot: 'title', r: 'epic', name: 'Displacement Detective', d: 'Knows distance from displacement.', set: 'v' },
+  { id: 't_full', slot: 'title', r: 'legendary', name: 'Full Credit', d: 'Shows ALL the work.', set: 'v' },
+  { id: 'c_test', slot: 'confetti', r: 'common', name: 'Test Paper Confetti', d: 'Graded A+.', set: 'v' },
+  { id: 'bg_lake', slot: 'bg', r: 'rare', name: 'The Lake', d: '600 m wide.', set: 'v' },
+  { id: 'bg_track', slot: 'bg', r: 'epic', name: 'Race Track', d: '600 m race.', set: 'v' },
 ];
 const ITEM = Object.fromEntries(ITEMS.map(i => [i.id, i]));
 
@@ -72,6 +94,7 @@ const CONFETTI = {
   c_banana: ['#f2c230', '#ffe066', '#6b4e00', '#fab005'],
   c_gold: ['#fcc419', '#f59f00', '#fff3bf', '#e8590c'],
   c_galaxy: ['#845ef7', '#5c7cfa', '#ffffff', '#f06595', '#15aabf'],
+  c_test: ['#ffffff', '#1c7ed6', '#e03131', '#ced4da'],
 };
 
 // ---------- character ----------
@@ -89,6 +112,8 @@ function bgSVG(id) {
   if (id === 'bg_space') return `<rect width="200" height="220" fill="#0d1530"/>` + [[20, 20], [60, 44], [170, 30], [150, 80], [30, 120], [180, 150], [12, 180], [90, 16], [120, 200], [186, 204]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${1 + (i % 3) * .6}" fill="#fff"/>`).join('') + '<circle cx="176" cy="104" r="10" fill="#e8590c" opacity=".8"/>';
   if (id === 'bg_sunset') return `<defs><linearGradient id="gSunset" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5f3dc4"/><stop offset=".55" stop-color="#f06595"/><stop offset="1" stop-color="#ffa94d"/></linearGradient></defs><rect width="200" height="220" fill="url(#gSunset)"/><circle cx="100" cy="190" r="40" fill="#ffd43b" opacity=".6"/>`;
   if (id === 'bg_aurora') return `<rect width="200" height="220" fill="#0b1a2a"/><path d="M0 70 Q50 30 100 70 T200 60 L200 110 Q150 80 100 110 T0 100 Z" fill="#20c997" opacity=".45"/><path d="M0 40 Q60 10 110 40 T200 30 L200 60 Q150 40 100 62 T0 64 Z" fill="#845ef7" opacity=".4"/>`;
+  if (id === 'bg_lake') return `<rect width="200" height="220" fill="#a5d8ff"/><rect y="120" width="200" height="100" fill="#1c7ed6"/><path d="M0 140 Q25 132 50 140 T100 140 T150 140 T200 140" fill="none" stroke="#74c0fc" stroke-width="4"/><path d="M0 175 Q25 167 50 175 T100 175 T150 175 T200 175" fill="none" stroke="#74c0fc" stroke-width="4"/><circle cx="168" cy="36" r="16" fill="#ffd43b"/>`;
+  if (id === 'bg_track') return `<rect width="200" height="220" fill="#2b8a3e"/><rect y="130" width="200" height="90" fill="#c0582b"/>` + [150, 175, 200].map(y => `<line x1="0" y1="${y}" x2="200" y2="${y}" stroke="#fff" stroke-width="2" opacity=".7"/>`).join('') + Array.from({ length: 10 }, (_, i) => `<rect x="${i * 20}" y="120" width="10" height="10" fill="${i % 2 ? '#fff' : '#1b1f27'}"/><rect x="${i * 20 + 10}" y="120" width="10" height="10" fill="${i % 2 ? '#1b1f27' : '#fff'}"/>`).join('');
   return `<rect width="200" height="220" fill="#eef3f7"/>` + Array.from({ length: 11 }, (_, i) => `<line x1="${i * 20}" y1="0" x2="${i * 20}" y2="220" stroke="#d3dde6"/><line x1="0" y1="${i * 20 + 10}" x2="200" y2="${i * 20 + 10}" stroke="#d3dde6"/>`).join('');
 }
 const BODY = 'M34 222 Q36 156 100 150 Q164 156 166 222 Z';
@@ -102,6 +127,9 @@ function outfitSVG(id, shirt) {
     case 'tux': return `${body(INK)}<path d="M86 152 L100 200 L114 152 Z" fill="#f8f9fa"/><path d="M90 160 L100 165 L90 170 Z M110 160 L100 165 L110 170 Z" fill="#e03131"/>`;
     case 'gold': return `${body('#f5c542')}<path d="M60 170 L80 210 M130 164 L150 204" stroke="#fff" stroke-width="6" opacity=".45" stroke-linecap="round"/><path d="M88 152 Q100 164 112 152" fill="none" stroke="#b08900" stroke-width="3"/>`;
     case 'galaxy': return `${body('#2b1b5a')}` + [[60, 190], [80, 170], [120, 180], [140, 200], [100, 205], [70, 212], [130, 165]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 2 ? 2 : 1.4}" fill="${i % 3 ? '#fff' : '#f06595'}"/>`).join('');
+    case 'tracksuit': return `${body('#1c7ed6')}<path d="M52 180 L66 222 M148 180 L134 222" stroke="#fff" stroke-width="7"/><path d="M100 152 L100 222" stroke="#f8f9fa" stroke-width="3"/>`;
+    case 'sailor': return `${body('#f8f9fa')}<path d="M70 152 L100 186 L130 152 L118 152 L100 172 L82 152 Z" fill="#1c3d8f" ${ST}/><path d="M96 182 L104 182 L100 194 Z" fill="#e03131"/>`;
+    case 'checker': { let c = ''; for (let i = 0; i < 9; i++) for (let j = 0; j < 4; j++) if ((i + j) % 2) c += `<rect x="${34 + i * 15}" y="${160 + j * 16}" width="15" height="16" fill="#1b1f27"/>`; return `<defs><clipPath id="clipBody"><path d="${BODY}"/></clipPath></defs>${body('#f8f9fa')}<g clip-path="url(#clipBody)">${c}</g><path d="${BODY}" fill="none" ${ST}/>`; }
     default: return `${body(shirt)}<path d="M86 152 Q100 164 114 152" fill="none" ${ST}/>`;
   }
 }
@@ -134,6 +162,10 @@ function hatSVG(id) {
     case 'helmet': return `<circle cx="100" cy="92" r="57" fill="#a5d8ff" fill-opacity=".22" stroke="#dee2e6" stroke-width="7"/><path d="M62 70 Q74 46 100 42" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".8"/>`;
     case 'wig': { let s = ''; for (let i = 0; i < 6; i++) { const x = 56 - (i % 2) * 5, y = 62 + i * 14; s += `<circle cx="${x}" cy="${y}" r="12" fill="#f1f3f5" stroke="#adb5bd" stroke-width="2.5"/><circle cx="${200 - x}" cy="${y}" r="12" fill="#f1f3f5" stroke="#adb5bd" stroke-width="2.5"/>`; } for (let x = 66; x <= 134; x += 17) s += `<circle cx="${x}" cy="${52 - Math.abs(100 - x) * -0.1}" r="14" fill="#f1f3f5" stroke="#adb5bd" stroke-width="2.5"/>`; return s; }
     case 'crown': return `<path d="M64 62 L64 30 L81 46 L100 20 L119 46 L136 30 L136 62 Z" fill="#fcc419" stroke="#b08900" stroke-width="3" stroke-linejoin="round"/><circle cx="100" cy="50" r="5" fill="#e03131"/><circle cx="80" cy="54" r="4" fill="#1c7ed6"/><circle cx="120" cy="54" r="4" fill="#2b8a3e"/>`;
+    case 'headband': return `<path d="M58 74 Q100 58 142 74 L142 84 Q100 68 58 84 Z" fill="#e03131" ${ST}/><path d="M140 76 L158 70 L154 84 Z" fill="#e03131" ${ST}/>`;
+    case 'captain': return `<path d="M60 70 Q60 42 100 40 Q140 42 140 70 Z" fill="#f8f9fa" ${ST}/><rect x="56" y="62" width="88" height="12" rx="4" fill="#1c3d8f" ${ST}/><path d="M60 74 Q100 92 140 74" fill="none" ${ST}/><circle cx="100" cy="56" r="7" fill="#fcc419" stroke="#b08900" stroke-width="2"/>`;
+    case 'catears': return `<path d="M62 66 L66 30 L90 52 Z" fill="#f08c00" ${ST}/><path d="M138 66 L134 30 L110 52 Z" fill="#f08c00" ${ST}/><path d="M68 58 L70 40 L82 52 Z M132 58 L130 40 L118 52 Z" fill="#ffc9c9"/>`;
+    case 'rockethat': return `<path d="M100 2 Q118 22 118 50 L82 50 Q82 22 100 2 Z" fill="#f8f9fa" ${ST}/><circle cx="100" cy="28" r="6" fill="#74c0fc" ${ST}/><path d="M82 40 L70 56 L82 52 Z M118 40 L130 56 L118 52 Z" fill="#e03131" ${ST}/><path d="M90 52 L100 66 L110 52 Z" fill="#ffa94d"/>`;
     case 'halo': return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -5;0 0" dur="2.2s" repeatCount="indefinite"/><ellipse cx="100" cy="30" rx="40" ry="12" fill="none" stroke="#ffd43b" stroke-width="12" opacity=".25"/><ellipse cx="100" cy="30" rx="36" ry="9" fill="none" stroke="#fcc419" stroke-width="6"/></g>`;
     default: return '';
   }
@@ -146,24 +178,33 @@ function petSVG(id) { // drawn centered at (0,0), about 60x50
     case 'dummy': return `<circle r="16" fill="#f2c230" ${ST}/><path d="M0 0 L0 -16 A16 16 0 0 1 16 0 Z M0 0 L0 16 A16 16 0 0 1 -16 0 Z" fill="${INK}"/>`;
     case 'platypus': return `<ellipse cx="-22" cy="4" rx="11" ry="6" fill="#6f4630" ${ST}/><ellipse cx="0" cy="2" rx="22" ry="13" fill="#8d5a3b" ${ST}/><ellipse cx="24" cy="-2" rx="11" ry="6" fill="#495057" ${ST}/><circle cx="12" cy="-5" r="2.6" fill="${INK}"/><ellipse cx="-8" cy="15" rx="6" ry="3" fill="#e8590c"/><ellipse cx="9" cy="15" rx="6" ry="3" fill="#e8590c"/>`;
     case 'moon': return `<circle r="17" fill="#dee2e6" ${ST}/><circle cx="-7" cy="-6" r="4" fill="#adb5bd"/><circle cx="8" cy="7" r="3" fill="#adb5bd"/><circle cx="-4" cy="3" r="2" fill="${INK}"/><circle cx="5" cy="-3" r="2" fill="${INK}"/>`;
+    case 'soccer': return `<circle r="16" fill="#fff" ${ST}/><path d="M-5 -5 L5 -5 L7 4 L0 9 L-7 4 Z" fill="${INK}"/>`;
+    case 'cartpet': return `<path d="M-20 -14 L-14 6 L14 6 L20 -10 Z" fill="#dee2e6" ${ST}/><path d="M-20 -14 L-26 -18" ${ST}/><circle cx="-9" cy="11" r="4" fill="${INK}"/><circle cx="10" cy="11" r="4" fill="${INK}"/>`;
+    case 'rccar': return `<rect x="-22" y="-10" width="44" height="14" rx="4" fill="#1c7ed6" ${ST}/><rect x="-10" y="-18" width="18" height="9" rx="3" fill="#fff" ${ST}/><circle cx="-12" cy="6" r="6" fill="${INK}"/><circle cx="12" cy="6" r="6" fill="${INK}"/><line x1="16" y1="-10" x2="22" y2="-26" ${ST}/>`;
+    case 'tom': return `<ellipse cx="2" cy="8" rx="18" ry="12" fill="#f08c00" ${ST}/><circle cx="-10" cy="-8" r="11" fill="#f08c00" ${ST}/><path d="M-19 -14 L-17 -26 L-11 -18 M-1 -14 L-3 -26 L-9 -18" fill="#f08c00" ${ST}/><circle cx="-14" cy="-9" r="1.8" fill="${INK}"/><circle cx="-6" cy="-9" r="1.8" fill="${INK}"/><path d="M18 10 Q30 2 24 -10" fill="none" ${ST}/>`;
+    case 'boatpet': return `<path d="M-26 -2 L26 -2 L18 12 L-20 12 Z" fill="#1c7ed6" ${ST}/><rect x="-8" y="-14" width="16" height="12" fill="#fff" ${ST}/><path d="M-30 16 Q-15 10 0 16 T30 16" fill="none" stroke="#74c0fc" stroke-width="3"/>`;
+    case 'shuttle': return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -5;0 0" dur="1.6s" repeatCount="indefinite"/><path d="M-26 4 L14 4 Q30 0 14 -6 L-26 -6 Z" fill="#f8f9fa" ${ST}/><path d="M-20 -6 L-8 -20 L0 -6 Z" fill="#dee2e6" ${ST}/><path d="M-26 -4 L-36 -10 L-36 6 L-26 2 Z" fill="#ffa94d"/><circle cx="10" cy="-1" r="3" fill="#74c0fc"/></g>`;
     case 'satellite': return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -4;0 0" dur="2s" repeatCount="indefinite"/><rect x="-7" y="-7" width="14" height="14" fill="#ced4da" ${ST}/><rect x="-30" y="-5" width="20" height="10" fill="#1c7ed6" ${ST}/><rect x="10" y="-5" width="20" height="10" fill="#1c7ed6" ${ST}/><line x1="0" y1="-7" x2="0" y2="-16" ${ST}/><circle cx="0" cy="-17" r="3" fill="#e03131"/></g>`;
     default: return '';
   }
 }
+// Shiny variants glow gold and sparkle.
+const SPARKS = [[30, 40, 0], [170, 60, .5], [40, 170, 1], [176, 150, 1.4]].map(([x, y, d]) => `<path transform="translate(${x} ${y})" d="M0 -7 L2 -2 L7 0 L2 2 L0 7 L-2 2 L-7 0 L-2 -2 Z" fill="#fff3bf"><animate attributeName="opacity" values="0;1;0" dur="1.6s" begin="${d}s" repeatCount="indefinite"/></path>`).join('');
+const shine = (svg, on) => on && svg ? `<g filter="url(#fxShiny)">${svg}</g>${SPARKS}` : svg;
 // Full character. crop: 'head' (for small badges), 'body', or false.
 function avatarSVG(av, eq, crop) {
-  av = av || Game.state.avatar; eq = eq || Game.state.equip || {};
+  av = av || Game.state.avatar; eq = eq || Game.state.equip || {}; const sh = eq.shiny || {};
   const skin = SKINS[av.skin] || SKINS[1], hc = HAIRC[av.hairColor] || HAIRC[0], shirt = SHIRTS[av.shirt] || SHIRTS[0];
   const vb = crop === 'head' ? '38 20 124 124' : crop === 'body' ? '20 40 160 180' : '0 0 200 220';
   return `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(av.name)}'s character">` +
     bgSVG(eq.bg) +
     (av.hair === 'long' ? `<path d="M56 90 Q48 160 72 170 L128 170 Q152 160 144 90 Z" fill="${hc}" ${ST}/>` : '') +
-    `<rect x="90" y="124" width="20" height="30" fill="${skin}" ${ST}/>` + outfitSVG(eq.outfit, shirt) +
+    `<rect x="90" y="124" width="20" height="30" fill="${skin}" ${ST}/>` + shine(outfitSVG(eq.outfit, shirt), sh.outfit) +
     `<circle cx="58" cy="98" r="9" fill="${skin}" ${ST}/><circle cx="142" cy="98" r="9" fill="${skin}" ${ST}/>` +
     `<circle cx="100" cy="92" r="42" fill="${skin}" ${ST}/>` +
     (eq.hat === 'helmet' || eq.hat === 'wig' ? '' : hairTop(av.hair, hc)) + faceSVG(av.eyes, av.mouth) +
-    hatSVG(eq.hat) +
-    (eq.pet ? `<g transform="translate(160 196)">${petSVG(eq.pet)}</g>` : '') + '</svg>';
+    shine(hatSVG(eq.hat), sh.hat) +
+    (eq.pet ? shine(`<g transform="translate(160 196)">${petSVG(eq.pet)}</g>`, sh.pet) : '') + '</svg>';
 }
 // Icon for an item tile (HTML string).
 function itemIcon(it) {

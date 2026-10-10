@@ -25,11 +25,10 @@ const BOSS_GENS = [
   () => ({ mcq: { q: 'Magnus lowers a barbell and it speeds up on the way down (but slower than a drop). His applied force is...', opts: [{ t: 'Less than the weight, but more than zero', ok: true }, { t: 'Equal to the weight', why: 'Then it would move at constant velocity.' }, { t: 'More than the weight', why: 'Then the net force would point up and it would slow down.' }, { t: 'Zero', why: 'That would be dropping it.' }], explain: 'Speeding up downward means F<sub>A</sub> < |F<sub>g</sub>|, but he still pushes up some.' } }),
 ];
 
-let bossDeck = [];
-function bossStep(k) {
+function bossStep(k, gens, store) {
   return (el, api) => {
-    if (k === 0) bossDeck = shuffle(BOSS_GENS).slice(0, 10).map(g => g());
-    const Q = bossDeck[k], LIMIT = 25; let T = LIMIT, over = false;
+    if (k === 0) store.deck = shuffle(gens).slice(0, 10).map(g => g());
+    const Q = store.deck[k], LIMIT = Q.num ? 60 : 25; let T = LIMIT, over = false;
     const hearts = h('span', { class: 'hearts', 'aria-label': 'hearts left' });
     const bar = h('div', { class: 'timer' }, h('i'));
     const paint = () => hearts.innerHTML = '&#9829;'.repeat(api.run.hearts) + `<span style="opacity:.2">${'&#9829;'.repeat(3 - api.run.hearts)}</span>`;
@@ -52,7 +51,7 @@ function bossStep(k) {
       if (over) return false;
       T -= dt; bar.firstChild.style.width = Math.max(0, T / LIMIT * 100) + '%';
       if (T <= 0) {
-        over = true; el.querySelectorAll('button, input').forEach(b => b.disabled = true);
+        over = true; el.querySelectorAll('button, input, select').forEach(b => b.disabled = true);
         wrapped.wrong(el);
         wrapped.done(`Time's up! ${Q.num ? `Answer: <b>${cfg.ans} ${cfg.unit}</b>. ` : ''}${cfg.explain}`);
         return false;
@@ -62,6 +61,6 @@ function bossStep(k) {
 }
 Game.add({
   id: 'boss', boss: true, section: 'boss', tag: 'Final Boss', title: 'Newton\'s Final Exam',
-  blurb: '10 random rapid-fire questions from every station. 25 seconds each. Three hearts. Faster answers earn bonus XP.',
-  steps: Array.from({ length: 10 }, (_, k) => bossStep(k)),
+  blurb: '10 random rapid-fire questions from the forces stations. 25 s per question (60 s for calculations). Three hearts.',
+  steps: (store => Array.from({ length: 10 }, (_, k) => bossStep(k, BOSS_GENS, store)))({}),
 });

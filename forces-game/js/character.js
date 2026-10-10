@@ -41,16 +41,16 @@ Game.character = function (tab = 'look') {
   }
   function locker() {
     const owned = ITEMS.filter(i => s.inv[i.id]).length;
-    panel.append(h('p', { class: 'ctx', style: 'margin:0' }, `Collection: ${owned} / ${ITEMS.length}. Tap an item you own to equip it. Locked items come from cases.`));
+    panel.append(h('p', { class: 'ctx', style: 'margin:0' }, `Collection: ${owned} / ${ITEMS.length}. Tap an item you own to equip it. Got a shiny? Tap the equipped item again to make it sparkle. Duplicates can be traded for chips in the Casino.`));
     for (const [slot, label] of Object.entries(SLOTS)) {
       const items = ITEMS.filter(i => i.slot === slot);
       const grid = h('div', { class: 'locker' });
-      grid.append(h('button', { class: 'tile none' + (!s.equip[slot] ? ' eq' : ''), onclick: () => { delete s.equip[slot]; SFX.click(); refresh(); show('locker'); } }, h('div', { class: 'ti-icon' }, 'None'), h('span', {}, 'Default')));
+      grid.append(h('button', { class: 'tile none' + (!s.equip[slot] ? ' eq' : ''), onclick: () => { delete s.equip[slot]; if (s.equip.shiny) s.equip.shiny[slot] = false; SFX.click(); refresh(); show('locker'); } }, h('div', { class: 'ti-icon' }, 'None'), h('span', {}, 'Default')));
       items.forEach(it => {
-        const have = s.inv[it.id];
-        const t = h('button', { class: 'tile' + (have ? '' : ' locked') + (s.equip[slot] === it.id ? ' eq' : ''), style: `--rc:var(${RARITY[it.r].c})`, title: have ? it.name : `Locked ${RARITY[it.r].name}`, disabled: !have },
-          h('div', { class: 'ti-icon', html: have ? itemIcon(it) : '<div class="ti-q">?</div>' }), h('span', {}, have ? it.name : RARITY[it.r].name + ' ???'));
-        if (have) t.onclick = () => { s.equip[slot] = it.id; SFX.good(); refresh(); show('locker'); };
+        const have = s.inv[it.id], ns = s.shinyInv[it.id] || 0, eqd = s.equip[slot] === it.id, eqShiny = eqd && !!(s.equip.shiny || {})[slot];
+        const t = h('button', { class: 'tile' + (have ? '' : ' locked') + (eqd ? ' eq' : '') + (eqShiny ? ' shiny' : ''), style: `--rc:var(${RARITY[it.r].c})`, title: have ? (ns ? 'Tap the equipped item again to switch shiny on or off' : it.name) : `Locked ${RARITY[it.r].name}`, disabled: !have },
+          h('div', { class: 'ti-icon', html: have ? itemIcon(it) : '<div class="ti-q">?</div>' }), h('span', {}, have ? `${it.name}${have > 1 ? ' x' + have : ''}${ns ? ' (shiny!)' : ''}` : RARITY[it.r].name + ' ???'));
+        if (have) t.onclick = () => { equipItem(it, eqd && ns ? !eqShiny : false); SFX.good(); refresh(); show('locker'); };
         grid.append(t);
       });
       panel.append(h('h3', { class: 'slot-h' }, `${label} (${items.filter(i => s.inv[i.id]).length}/${items.length})`), grid);

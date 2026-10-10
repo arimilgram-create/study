@@ -43,7 +43,9 @@ function loadState() {
   if (!s || typeof s.xp !== 'number') s = { xp: 0, stars: {}, sound: true };
   // v2 fields: spendable wallet, inventory, equipped cosmetics, character, first free case
   if (typeof s.wallet !== 'number') { s.wallet = s.xp; s.freeCase = true; }
-  s.inv = s.inv || {}; s.equip = s.equip || {}; s.opened = s.opened || 0;
+  s.inv = s.inv || {}; s.shinyInv = s.shinyInv || {}; s.equip = s.equip || {}; s.opened = s.opened || 0;
+  if (typeof s.chips !== 'number') s.chips = 0;
+  s.workStreak = s.workStreak || 0;
   s.avatar = Object.assign({}, DEFAULT_AVATAR, s.avatar || {});
   return s;
 }
@@ -109,6 +111,7 @@ const Game = {
   hud() {
     const s = this.state;
     $('#xp').textContent = s.wallet;
+    $('#chips').textContent = s.chips;
     $('#rank').textContent = rankFor(s.xp);
     $('#streak').textContent = this.streak >= 3 ? `${this.streak} (x${this.mult()})` : this.streak;
     $('#streakBox').classList.toggle('hot', this.streak >= 3);
@@ -134,6 +137,7 @@ const Game = {
     $('#homeBtn').onclick = () => this.map();
     $('#meBtn').onclick = () => { SFX.click(); this.character(); };
     $('#shopBtn').onclick = () => { SFX.click(); this.shop(); };
+    $('#casinoBtn').onclick = () => { SFX.click(); this.casino(); };
     $('#soundBtn').onclick = () => { this.state.sound = !this.state.sound; saveState(); this.hud(); SFX.click(); };
     this.hud(); this.map();
   },
@@ -155,8 +159,8 @@ const Game = {
     app.append(
       h('section', { class: 'hero' },
         h('div', {},
-          h('h1', { html: 'Forces, FBDs &amp; the <em>First Law</em>' }),
-          h('p', {}, 'Every station is one question from your quiz review, turned into a mini-game. Earn XP, crack open cases for cosmetics, and dress up your character. Beat the Final Boss when you\'re ready.'),
+          h('h1', { html: 'Forces, Motion &amp; the <em>First Law</em>' }),
+          h('p', {}, 'Every station is a question from your review sheets, turned into a mini-game. Earn XP, crack open cases, trade your pulls for chips at the casino, and dress up your character.'),
           h('p', { class: 'mono' }, `Stars: ${total} / ${this.levels.length * 3}`)),
         h('div', { class: 'player' },
           h('button', { class: 'player-av', onclick: () => this.character(), 'aria-label': 'Customize character', html: avatarSVG(s.avatar, s.equip) }),
@@ -164,16 +168,19 @@ const Game = {
             h('b', { class: 'pname' }, s.avatar.name),
             h('span', { class: 'ptitle' }, s.equip.title ? `"${ITEM[s.equip.title].name}"` : rankFor(s.xp)),
             h('span', { class: 'mono' }, `Rank: ${rankFor(s.xp)}`),
-            h('span', { class: 'mono' }, `XP to spend: ${s.wallet}`),
+            h('span', { class: 'mono' }, `XP to spend: ${s.wallet} | Chips: ${s.chips}`),
             h('span', { class: 'mono' }, `Collection: ${owned} / ${ITEMS.length}`),
             h('div', { class: 'row' },
               h('button', { class: 'btn small', onclick: () => this.character() }, 'Customize'),
-              h('button', { class: 'btn small primary', onclick: () => this.shop() }, s.freeCase ? 'Free case!' : 'Open cases'))))),
+              h('button', { class: 'btn small primary', onclick: () => this.shop() }, s.freeCase ? 'Free case!' : 'Open cases'),
+              h('button', { class: 'btn small', onclick: () => this.casino() }, 'Casino'))))),
       h('aside', { class: 'cheat' },
-        h('div', { class: 'eq', html: `<b>Cheat sheet</b> &nbsp; F<sub>net</sub> = F<sub>1</sub> + F<sub>2</sub> + ... &nbsp;&nbsp; F<sub>g</sub> = m &middot; g &nbsp;&nbsp; g = -10 N/kg (Earth)` }),
+        h('div', { class: 'eq', html: `<b>Cheat sheet</b> &nbsp; &Sigma;F = F<sub>1</sub> + F<sub>2</sub> + ... &nbsp;&nbsp; F<sub>g</sub> = m &middot; g &nbsp;&nbsp; g = -10 N/kg &nbsp;&nbsp; s<sub>avg</sub> = d / t &nbsp;&nbsp; v<sub>avg</sub> = &Delta;x / t &nbsp;&nbsp; &Delta;x = x<sub>f</sub> - x<sub>i</sub>` }),
         h('small', {}, 'Up and right are +. Down and left are -. Show: equation, values plugged in, answer with units.'),
         h('div', { class: 'legend', html: Object.entries(FORCES).map(([k, f]) => `<span style="color:var(${f.c})">${f.label}</span>`).join('') })),
-      ...section('main', 'Quiz Review', 'Questions 1-9 from the first review sheet.'),
+      h('section', { class: 'lockcard', html: `${lockSVG}<div><h2>Test-day rule: LOCK IN</h2><p>Points get lost for missing work. So here, every calculation makes you <b>write the equation</b>, <b>plug in the values with units</b>, then <b>answer with units</b>. You can't skip to the answer. Do it here and it'll be automatic on the test.</p><p class="mono">Full-work streak: ${s.workStreak}</p></div>` }),
+      ...section('unit2', 'Test Review: Balanced Forces & Constant Velocity', 'Your upcoming test. Graphs, velocity, displacement, normal force, and inertia.'),
+      ...section('main', 'Quiz Review: Forces, FBDs & First Law', 'Questions 1-9 from the first review sheet.'),
       ...section('extra', 'Extra Practice', 'From the extra review sheet: Mr. C\'s desk, the Mars platypus, and Magnus\'s barbell.'),
       ...section('boss', 'Final Boss', 'Random questions from everything above.'));
     scrollTo(0, 0);
@@ -234,6 +241,7 @@ const Game = {
         h('button', { class: 'btn', onclick: () => this.play(index) }, 'Replay'),
         index + 1 < this.levels.length ? h('button', { class: 'btn primary', onclick: () => this.play(index + 1) }, 'Next station >') : null,
         h('button', { class: 'btn', onclick: () => this.shop() }, 'Open cases'),
+        h('button', { class: 'btn', onclick: () => this.casino() }, 'Casino'),
         h('button', { class: 'btn', onclick: () => this.map() }, 'Map'))));
   },
 };

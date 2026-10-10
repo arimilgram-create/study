@@ -246,6 +246,89 @@ input[type=range]{width:100%;accent-color:var(--f-a)}
 .rank-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:56px;border:2px dashed var(--line);border-radius:12px;padding:8px}
 .rank-slot{font:400 1.4rem var(--display);width:48px;height:48px;border:2px solid var(--edge);border-radius:10px;background:var(--card);color:var(--pen)}
 .rank-sign{font:700 1.4rem var(--mono);width:40px;height:40px;border-radius:50%;border:2px solid var(--edge);background:var(--hi);color:var(--on-hi)}
+/* lock in: show-your-work */
+.lockin{display:flex;align-items:center;gap:10px;background:var(--hi);color:var(--on-hi);border:2px solid var(--edge);border-radius:10px;padding:8px 12px;font-size:.95rem}
+.lockin svg{flex:none}
+.lockcard{display:flex;gap:16px;align-items:flex-start;margin:22px 0 4px;border:3px solid var(--edge);border-radius:var(--r);padding:16px 18px;background:var(--hi);color:var(--on-hi);box-shadow:5px 5px 0 var(--shade)}
+.lockcard svg{width:44px;height:44px;flex:none}
+.lockcard h2{font-size:1.4rem;margin-bottom:6px}
+.lockcard p{margin:4px 0;max-width:72ch}
+.paper{border:2px solid var(--line);border-radius:12px;padding:6px 14px;background:var(--paper);background-image:repeating-linear-gradient(transparent 0 37px,var(--grid) 37px 38px)}
+.wrow{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.wrow:last-child{border-bottom:0}
+.wnum{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--card);display:flex;align-items:center;justify-content:center;font:700 .95rem var(--mono)}
+.wbody{display:flex;flex-direction:column;gap:8px;min-width:0}
+.wtitle{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700}
+.whand{font-family:var(--hand);color:var(--pen);font-size:1.6rem;line-height:1.2;overflow-wrap:anywhere;animation:write .4s ease-out}
+.eqopts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.eqchip{font:600 1rem var(--mono);text-align:left;border:2px solid var(--edge);border-radius:10px;background:var(--card);padding:8px 12px}
+.eqchip:hover:not(:disabled){background:var(--hi);color:var(--on-hi)}
+.eqchip:disabled{opacity:.4;text-decoration:line-through}
+.plugline{font:600 1.1rem var(--mono);line-height:2.4;overflow-wrap:anywhere}
+.blank,.ansbox{font:700 1.05rem var(--mono);width:6.2em;max-width:42vw;padding:4px 8px;border:2px solid var(--edge);border-radius:8px;background:var(--card);color:var(--ink);margin:0 3px}
+.blank.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.unitsel{font:700 1rem var(--mono);padding:5px 6px;border:2px solid var(--edge);border-radius:8px;background:var(--card);color:var(--ink)}
+.wlhs{font:600 1.1rem var(--mono)}
+.fullwork{display:flex;align-items:center;gap:10px;border:2px solid var(--good);color:var(--good);border-radius:10px;padding:8px 12px;font-weight:700;animation:pop .3s}
+/* graphs */
+.plot{width:100%;height:auto;display:block;max-width:560px}
+.gdraw svg{width:100%;max-width:620px;height:auto;display:block;background:var(--card);border:2px solid var(--line);border-radius:12px;touch-action:manipulation;cursor:crosshair}
+.mini-fbd svg{max-width:220px;margin:0 auto;display:block}
+.track svg{max-width:640px;margin:0 auto;display:block}
+.step .q + div svg.plot,.step > div > svg.plot{max-width:520px}
+/* shop upgrades */
+.case-card{position:relative}
+.new-badge{position:absolute;top:10px;right:10px;background:var(--bad);color:#fff;font:700 .75rem var(--mono);padding:2px 8px;border-radius:999px;letter-spacing:.1em}
+.odds .shiny-odds{color:var(--pen)}
+.ghost-link{align-self:flex-start;box-shadow:none}
+.contents{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.contents .rarity{color:var(--rc)}
+.mini-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:6px}
+.mini-tiles .tile{width:auto;font-size:.66rem;padding:4px}
+.mini-tiles .ti-icon{width:52px;height:52px}
+.tile.owned{outline:2px solid var(--good)}
+.tile.shiny,.drop.shiny,.ti-icon.shiny{position:relative;background-image:linear-gradient(115deg,#ffd43b33,#74c0fc33,#f0659533,#69db7c33,#ffd43b33);background-size:300% 100%;animation:holo 2.4s linear infinite}
+.tile.shiny{border-color:#fcc419}
+.case-art.opening{display:flex;justify-content:center;padding:30px 0;animation:shakecase .7s ease-in}
+.case-art.opening svg{width:180px}
+.case-art.opening .lid{animation:lid .7s ease-in forwards;transform-origin:60px 20px}
+.flash{position:fixed;inset:0;pointer-events:none;z-index:55;background:radial-gradient(circle,color-mix(in srgb,var(--rc) 55%,transparent),transparent 70%);animation:flashout .9s ease-out forwards}
+.multi{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;perspective:800px}
+.flip{height:170px}
+.flip-in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.open .flip-in{transform:rotateY(180deg)}
+.flip-back,.flip-front{position:absolute;inset:0;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;border-radius:12px}
+.flip-back{background:var(--soft);border:3px solid var(--cc)}
+.flip-back svg{width:80%}
+.flip-front{transform:rotateY(180deg)}
+.flip-front .tile{width:100%;height:100%;justify-content:center}
+.flip.open .flip-front .tile{box-shadow:0 0 18px color-mix(in srgb,var(--rc) 70%,transparent)}
+/* casino */
+.chip-pill{display:flex;align-items:center;gap:6px;border:2px solid var(--edge);border-radius:999px;padding:4px 12px;background:var(--card);font-family:var(--mono)}
+.chip-ico{width:18px;height:18px;border-radius:50%;background:var(--r-leg);border:3px dashed var(--card);box-shadow:0 0 0 2px var(--edge)}
+.chipbal{font-size:1.1rem}
+.bet{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bet .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700}
+.betin{font:700 1.05rem var(--mono);width:6em;padding:6px 8px;border:2px solid var(--edge);border-radius:8px;background:var(--card);color:var(--ink)}
+.trade-list{display:flex;flex-direction:column;gap:6px}
+.trade-row{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:10px;align-items:center;border:2px solid var(--line);border-left:6px solid var(--rc);border-radius:10px;padding:6px 10px;background:var(--card)}
+.ti-icon.sm{width:52px;height:52px}
+.trade-name{display:flex;flex-direction:column;min-width:0}
+.trade-name span{font-size:.85rem;color:var(--muted)}
+.plinko-wrap{max-width:400px;margin:0 auto;width:100%}
+.coin-stage{display:flex;justify-content:center;padding:16px;perspective:600px}
+.coin{width:140px;height:140px;position:relative;transform-style:preserve-3d;transition:transform 1.3s cubic-bezier(.2,.7,.2,1)}
+.coin-face{position:absolute;inset:0;backface-visibility:hidden}
+.coin-face svg{width:100%;height:100%}
+.coin-face.back{transform:rotateY(180deg)}
+.casino-note{max-width:72ch;margin-top:14px}
+.xp-pop.chip{color:var(--r-leg);border-color:var(--r-leg)}
+.xp-pop.bad{color:var(--bad);border-color:var(--bad)}
+@keyframes holo{to{background-position:300% 0}}
+@keyframes shakecase{20%{transform:rotate(-4deg)}40%{transform:rotate(4deg)}60%{transform:rotate(-6deg) scale(1.04)}80%{transform:rotate(6deg) scale(1.08)}}
+@keyframes lid{to{transform:translateY(-26px) rotate(-14deg);opacity:0}}
+@keyframes flashout{from{opacity:1}to{opacity:0}}
+
 /* cosmetic arrow skins */
 .laser{animation:dash .6s linear infinite}
 .plasma{animation:plasma 1.1s ease-in-out infinite}
@@ -262,7 +345,8 @@ input[type=range]{width:100%;accent-color:var(--f-a)}
 @keyframes plasma{50%{opacity:.6}}
 @keyframes flyR{to{transform:translateX(140%) rotate(18deg);opacity:0}}
 @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition:none!important}}
-@media (max-width:720px){ .hero,.fbd,.sim,.char{grid-template-columns:minmax(0,1fr)} .char-card{position:static} .drop{grid-template-columns:minmax(0,1fr);justify-items:center} .player{grid-template-columns:110px minmax(0,1fr)} .me-txt{display:none} .me-btn{padding:2px} body{font-size:16px} .step{padding:14px} }
+.hud .stat b{white-space:nowrap}
+@media (max-width:720px){ .hud{position:static} .hero,.fbd,.sim,.char{grid-template-columns:minmax(0,1fr)} .char-card{position:static} .drop{grid-template-columns:minmax(0,1fr);justify-items:center} .player{grid-template-columns:110px minmax(0,1fr)} .me-txt{display:none} .me-btn{padding:2px} .lockcard{flex-direction:column} .trade-row{grid-template-columns:48px minmax(0,1fr)} .trade-row .row{grid-column:1/-1} body{font-size:16px} .step{padding:14px} }
 </style>
 
 <header class="hud">
@@ -270,26 +354,33 @@ input[type=range]{width:100%;accent-color:var(--f-a)}
   <div class="hud-stats">
     <button id="meBtn" class="me-btn" aria-label="Customize your character"><span id="meAvatar" class="mini-av"></span><span class="me-txt"><b id="meName"></b><small id="meTitle"></small></span></button>
     <div class="stat"><span class="k">XP</span><b id="xp">0</b></div>
+    <div class="stat"><span class="k">Chips</span><b id="chips">0</b></div>
     <div class="stat"><span class="k">Rank</span><b id="rank">At Rest</b></div>
     <div class="stat" id="streakBox"><span class="k">Streak</span><b id="streak">0</b></div>
     <button id="shopBtn" class="btn small primary">Cases</button>
+    <button id="casinoBtn" class="btn small">Casino</button>
     <button id="soundBtn" class="icon-btn" aria-pressed="true">Sound: on</button>
   </div>
 </header>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
   <filter id="fxGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="fxShiny" x="-30%" y="-30%" width="160%" height="160%"><feMorphology in="SourceAlpha" operator="dilate" radius="2" result="d"/><feFlood flood-color="#ffd43b"/><feComposite in2="d" operator="in" result="o"/><feGaussianBlur in="o" stdDeviation="2.5" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 </defs></svg>
 <main id="app" class="wrap"></main>
 <canvas id="confetti" aria-hidden="true"></canvas>
 
 <script src="js/core.js"></script>
 <script src="js/widgets.js"></script>
+<script src="js/widgets2.js"></script>
 <script src="js/cosmetics.js"></script>
 <script src="js/levels-a.js"></script>
 <script src="js/levels-b.js"></script>
 <script src="js/levels-c.js"></script>
 <script src="js/extra.js"></script>
 <script src="js/boss.js"></script>
+<script src="js/unit2a.js"></script>
+<script src="js/unit2b.js"></script>
 <script src="js/shop.js"></script>
+<script src="js/casino.js"></script>
 <script src="js/character.js"></script>
 <script>Game.boot();</script>
