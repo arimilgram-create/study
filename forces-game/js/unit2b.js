@@ -22,7 +22,7 @@ Game.add({
   steps: [
     (el, api) => FBD(el, api, { ctx: 'A 12 kg school desk sits on the floor.', q: 'Build the desk\'s free body diagram.', scene: deskSVG(), palette: ['Fg', 'FN', 'FA', 'Ff'], need: { up: ['FN'], down: ['Fg'], left: [], right: [] }, explain: 'Gravity down, the floor pushes up. Balanced: it\'s at rest.' }),
     (el, api) => WORK(el, api, { q: 'Calculate the weight of the 12 kg desk.', eq: 'Fg', plug: 'F<sub>g</sub> = [[12]] kg &middot; ([[-10]] N/kg)', ans: -120, unit: 'N', finalLine: 'F<sub>g</sub> = -120 N' }),
-    (el, api) => WORK(el, api, { q: 'Show your work for the normal force holding up the desk.', eq: 'net', form: '&Sigma;F = F<sub>N</sub> + F<sub>g</sub>', plug: '[[0]] N = F<sub>N</sub> + ([[-120]] N)', lhs: 'F<sub>N</sub> =', ans: 120, unit: 'N', finalLine: 'F<sub>N</sub> = 120 N', signMsg: 'Right size! The floor pushes UP, so it\'s positive.' }),
+    (el, api) => WORK(el, api, { q: 'Show your work for the normal force holding up the desk.', eq: 'net', form: '&Sigma;F = F<sub>g</sub> + F<sub>N</sub>', plug: '[[0]] N = ([[-120]] N) + F<sub>N</sub>', lhs: 'F<sub>N</sub> =', ans: 120, unit: 'N', finalLine: '120 N = F<sub>N</sub>', after: keyFor('8a'), signMsg: 'Right size! The floor pushes UP, so it\'s positive.' }),
     deskPress,
     (el, api) => MCQ(el, api, {
       q: 'What is different about the calculation when you push down on the desk with -15 N?',
@@ -34,7 +34,7 @@ Game.add({
       ],
       explain: 'Add the push to the equation: &Sigma;F = F<sub>N</sub> + F<sub>g</sub> + F<sub>A</sub>.',
     }),
-    (el, api) => WORK(el, api, { q: 'Calculate the new normal force while you push down with -15 N.', eq: 'net', form: '&Sigma;F = F<sub>N</sub> + F<sub>g</sub> + F<sub>A</sub>', plug: '[[0]] N = F<sub>N</sub> + ([[-120]] N) + ([[-15]] N)', lhs: 'F<sub>N</sub> =', ans: 135, unit: 'N', finalLine: 'F<sub>N</sub> = 135 N' }),
+    (el, api) => WORK(el, api, { q: 'Calculate the new normal force while you push down with -15 N.', eq: 'net', form: '&Sigma;F = F<sub>g</sub> + F<sub>N</sub> + F<sub>A</sub>', plug: '[[0]] N = ([[-120]] N) + F<sub>N</sub> + ([[-15]] N)', lhs: 'F<sub>N</sub> =', ans: 135, unit: 'N', finalLine: '135 N = F<sub>N</sub>', after: keyFor('8b') }),
   ],
 });
 
@@ -48,29 +48,27 @@ Game.add({
     (el, api) => NUM(el, api, {
       ctx: 'Larry pushes a shopping cart across the parking lot at a constant velocity with 12 N. Then he cuts across the grass, where friction rises to -80 N, and he pushes it at a slower constant velocity.',
       media: cartV, q: 'Read the graph: what is the cart\'s velocity in the <b>parking lot</b>?', ans: 3, unit: 'm/s', noWork: true, noLock: true,
-      hint: 'Find the first flat line and read its value off the velocity axis.', explain: 'The first flat line sits at 3 m/s (from 0 to 2.5 s).',
+      hint: 'Find the first flat line and read its value off the velocity axis.', explain: 'The first flat line sits at 3 m/s (from 0 to 2.5 s).' + keyFor('9a'),
     }),
-    (el, api) => NUM(el, api, { media: cartV, q: 'And the cart\'s velocity on the <b>grass</b>?', ans: 0.5, tol: 0.05, unit: 'm/s', noWork: true, noLock: true, hint: 'The second flat line is between 0 and 1 m/s.', explain: 'The second flat line is at 0.5 m/s (from 2.5 to 6 s).' }),
+    (el, api) => NUM(el, api, { media: cartV, q: 'And the cart\'s velocity on the <b>grass</b>?', ans: 0.5, tol: 0.05, unit: 'm/s', noWork: true, noLock: true, hint: 'The second flat line is between 0 and 1 m/s.', explain: 'The second flat line is at 0.5 m/s (from 2.5 to 6 s).' + keyFor('9a') }),
+    (el, api) => WORK(el, api, { media: cartV, ctx: 'Total displacement: do it like the answer key, one part at a time. Part 1 is the parking lot (0 to 2.5 s).', q: 'Find &Delta;x<sub>1</sub>, the displacement in the parking lot.', eq: 'vavg', form: 'v = &Delta;x / t', plug: '[[3]] m/s = &Delta;x<sub>1</sub> / [[2.5]] s', lhs: '&Delta;x<sub>1</sub> =', ans: 7.5, unit: 'm', finalLine: '7.5 m = &Delta;x<sub>1</sub>', hint: 'Multiply both sides by the time.' }),
+    (el, api) => WORK(el, api, { media: cartV, q: 'Find &Delta;x<sub>2</sub>, the displacement on the grass (2.5 s to 6 s, so 3.5 s).', eq: 'vavg', form: 'v = &Delta;x / t', plug: '[[0.5]] m/s = &Delta;x<sub>2</sub> / [[3.5]] s', lhs: '&Delta;x<sub>2</sub> =', ans: 1.75, tol: 0.011, unit: 'm', finalLine: '&Delta;x<sub>2</sub> = 1.75 m', hint: 'The grass part lasts 6 - 2.5 = 3.5 s.' }),
+    (el, api) => WORK(el, api, { media: cartV, q: 'Now the total displacement for the whole motion.', eq: 'dxsum', form: '&Delta;x<sub>T</sub> = &Delta;x<sub>1</sub> + &Delta;x<sub>2</sub>', plug: '&Delta;x<sub>T</sub> = [[7.5]] m + [[1.75]] m', lhs: '&Delta;x<sub>T</sub> =', ans: 9.25, tol: 0.011, unit: 'm', finalLine: '&Delta;x<sub>T</sub> = 9.25 m', after: 'Same answer as the area under the v-t graph.' + keyFor('9b') }),
     (el, api) => WORK(el, api, {
-      media: cartV, q: 'Calculate the total displacement for the whole motion.', eq: 'area', form: '&Delta;x = v<sub>1</sub>t<sub>1</sub> + v<sub>2</sub>t<sub>2</sub>',
-      plug: '&Delta;x = ([[3]] m/s)([[2.5]] s) + ([[0.5]] m/s)([[3.5]] s)', lhs: '&Delta;x =', ans: 9.25, tol: 0.02, unit: 'm', finalLine: '&Delta;x = 7.5 m + 1.75 m = 9.25 m',
-      hint: 'Each part: velocity times how long it lasted. The grass part lasts 6 - 2.5 = 3.5 s.', after: 'Displacement is the area under the v-t graph.',
-    }),
-    (el, api) => WORK(el, api, {
-      q: 'Calculate the force Larry needs to push the cart forward on the grass (friction = -80 N, constant velocity).', eq: 'net', form: '&Sigma;F = F<sub>A</sub> + F<sub>f</sub>',
-      plug: '[[0]] N = F<sub>A</sub> + ([[-80]] N)', lhs: 'F<sub>A</sub> =', ans: 80, unit: 'N', finalLine: 'F<sub>A</sub> = 80 N', after: 'Slower, but still constant velocity, so still balanced.',
+      q: 'Calculate the force Larry needs to push the cart forward on the grass (friction = -80 N, constant velocity).', eq: 'net', form: 'F<sub>net,x</sub> = F<sub>A</sub> + F<sub>f</sub>',
+      plug: '[[0]] N = F<sub>A</sub> + ([[-80]] N)', lhs: 'F<sub>A</sub> =', ans: 80, unit: 'N', finalLine: '80 N = F<sub>A</sub>', after: 'Slower, but still constant velocity, so still balanced.' + keyFor('9c'),
     }),
     (el, api) => GRAPHDRAW(el, api, {
       media: cartV, q: 'Draw the position graph for the whole motion.', x: [0, 6, 1], y: [0, 10, 1], snap: [0.5, 0.25], yl: 'x - position (m)',
       pts: [[0, 0], [2.5, 7.5], [6, 9.25]], hint: 'Two straight pieces: steep for 0-2.5 s (3 m/s), then shallow until 6 s (0.5 m/s). Where is the cart at 2.5 s and at 6 s?',
-      explain: 'Steep line to 7.5 m at 2.5 s, then a shallow line to 9.25 m at 6 s. Each slope is the velocity.',
+      explain: 'Steep line to 7.5 m at 2.5 s, then a shallow line to 9.25 m at 6 s. Each slope is the velocity.' + keyFor('9d'),
     }),
     (el, api) => motionPlayer(el, api, {
       q: 'Watch Larry\'s trip with both graphs and the FBD.', segs: [[0, 2.5, 3], [2.5, 6, 0.5]], x0: 0, track: [0, 10], icon: 'cart', fbd: cartFBD,
       xg: { x: [0, 6, 1], y: [0, 10, 2], yl: 'x - position (m)' }, vg: { x: [0, 6, 1], y: [-1, 4, 1], yl: 'v - velocity (m/s)' },
       note: 'Both parts are balanced (12 N vs 12 N, then 80 N vs 80 N). Bigger forces don\'t mean faster; they just balance a bigger friction.',
     }),
-    (el, api) => WORK(el, api, { q: 'Calculate the average speed for the entire motion (9.25 m in 6 s).', eq: 'savg', plug: 's<sub>avg</sub> = [[9.25]] m / [[6]] s', ans: 1.54, tol: 0.011, unit: 'm/s', finalLine: 's<sub>avg</sub> = 1.54 m/s' }),
+    (el, api) => WORK(el, api, { q: 'Calculate the average speed for the entire motion (9.25 m in 6 s).', eq: 'savg', plug: 's<sub>avg</sub> = [[9.25]] m / [[6]] s', ans: 1.54, tol: 0.011, unit: 'm/s', finalLine: 's<sub>avg</sub> = 1.54 m/s', after: keyFor('9e') }),
   ],
 });
 
@@ -85,22 +83,22 @@ Game.add({
     (el, api) => FBD(el, api, {
       ctx: 'A remote control car moves as shown in the position graph.', media: rcX, q: 'Build the free body diagram for when the car is moving to the <b>right</b> (7-12 s).',
       scene: rcCar, palette: ['Fg', 'FN', 'FA', 'Ff', 'Feng', 'Fair'], need: { up: ['FN'], down: ['Fg'], right: ['FA', 'Feng'], left: ['Ff', 'Fair'] },
-      hint: 'It moves at a constant velocity, so the push forward must balance something backward.', explain: 'Constant velocity to the right: motor force right balances friction left; F<sub>N</sub> balances F<sub>g</sub>.',
+      hint: 'It moves at a constant velocity, so the push forward must balance something backward.', explain: 'Constant velocity to the right: motor force right balances friction left; F<sub>N</sub> balances F<sub>g</sub>.' + keyFor('rc-a'),
     }),
     (el, api) => GRAPHDRAW(el, api, {
       media: rcX, q: 'Draw the velocity-time graph for the entire motion.', x: [0, 12, 1], y: [-3, 3, 1], yl: 'v - velocity (m/s)',
       pts: [[0, -2], [3, -2], [3, 0], [7, 0], [7, 1], [12, 1]],
       hint: 'Find each slope: 0-3 s goes from 9 m to 3 m. 3-7 s is flat. 7-12 s goes from 3 m to 8 m. Each piece is a flat line on the v-t graph.',
-      explain: '0-3 s: (3 - 9) / 3 = -2 m/s. 3-7 s: 0 m/s. 7-12 s: (8 - 3) / 5 = +1 m/s.',
+      explain: '0-3 s: (3 - 9) / 3 = -2 m/s. 3-7 s: 0 m/s. 7-12 s: (8 - 3) / 5 = +1 m/s.' + keyFor('rc-b'),
     }),
     (el, api) => motionPlayer(el, api, {
       q: 'Watch the car follow its position graph.', segs: [[0, 3, -2], [3, 7, 0], [7, 12, 1]], x0: 9, track: [0, 10], icon: 'car', fbd: rcFBD,
       xg: { x: [0, 12, 2], y: [0, 10, 2], yl: 'x - position (m)' }, vg: { x: [0, 12, 2], y: [-3, 3, 1], yl: 'v - velocity (m/s)' },
       note: 'Watch the FBD flip: when the car moves left, the motor pushes left and friction points right.',
     }),
-    (el, api) => WORK(el, api, { media: rcX, q: 'Determine the displacement for the entire motion.', eq: 'dx', plug: '&Delta;x = [[8]] m - [[9]] m', lhs: '&Delta;x =', ans: -1, unit: 'm', finalLine: '&Delta;x = -1 m', after: 'It ended 1 m to the left of where it started.' }),
-    (el, api) => WORK(el, api, { media: rcX, q: 'Determine the total distance traveled.', eq: 'dist', plug: 'd = [[6]] m + [[0]] m + [[5]] m', lhs: 'd =', ans: 11, unit: 'm', finalLine: 'd = 11 m', hint: 'Distance counts every meter, ignoring direction: 9 to 3, then sitting still, then 3 to 8.', after: 'Distance is always positive and counts both directions.' }),
-    (el, api) => WORK(el, api, { media: rcX, q: 'Determine the change in velocity from t<sub>i</sub> = 1 s to t<sub>f</sub> = 10 s.', eq: 'dv', plug: '&Delta;v = [[1]] m/s - ([[-2]] m/s)', lhs: '&Delta;v =', ans: 3, unit: 'm/s', finalLine: '&Delta;v = 3 m/s', hint: 'At 1 s it moves at -2 m/s. At 10 s it moves at +1 m/s.' }),
+    (el, api) => WORK(el, api, { media: rcX, q: 'Determine the displacement for the entire motion.', eq: 'dx', plug: '&Delta;x = [[8]] m - [[9]] m', lhs: '&Delta;x =', ans: -1, unit: 'm', finalLine: '&Delta;x = -1 m', after: 'It ended 1 m to the left of where it started. The key shows two ways to get it:' + keyFor('rc-c') }),
+    (el, api) => WORK(el, api, { media: rcX, q: 'Determine the total distance traveled.', eq: 'dist', plug: 'd = [[6]] m + [[0]] m + [[5]] m', lhs: 'd =', ans: 11, unit: 'm', finalLine: 'd = 11 m', hint: 'Distance counts every meter, ignoring direction: 9 to 3, then sitting still, then 3 to 8.', after: 'Distance is always positive and counts both directions.' + keyFor('rc-d') }),
+    (el, api) => WORK(el, api, { media: rcX, q: 'Determine the change in velocity from t<sub>i</sub> = 1 s to t<sub>f</sub> = 10 s.', eq: 'dv', plug: '&Delta;v = [[1]] m/s - ([[-2]] m/s)', lhs: '&Delta;v =', ans: 3, unit: 'm/s', finalLine: '&Delta;v = 3 m/s', hint: 'At 1 s it moves at -2 m/s. At 10 s it moves at +1 m/s.', after: keyFor('rc-e') }),
   ],
 });
 
@@ -139,7 +137,7 @@ Game.add({
         { t: 'a) A force acts on the ball toward the back of the truck.', why: 'Nothing is pushing it backward. From the sidewalk, the ball doesn\'t move back at all; the truck moves forward under it.' },
         { t: 'b) The ball\'s inertia causes this behavior.', ok: true },
       ],
-      explain: 'The ball tends to stay at rest. The truck speeds up forward, so the back of the truck catches up to the ball. No backward force needed.',
+      explain: 'The ball tends to stay at rest. The truck speeds up forward, so the back of the truck catches up to the ball. No backward force needed.' + keyFor('12'),
     }),
     (el, api) => MCQ(el, api, {
       q: 'Before the ball hits the tailgate, what does someone on the sidewalk see the ball do?',
@@ -158,18 +156,19 @@ Game.add({
 const q13V = plotSVG({ x: [0, 12, 1], y: [-5, 5, 1], yl: 'v - velocity (m/s)' }, [[0, 3], [4, 3], [4, -1], [12, -1]]);
 Game.add({
   id: 'v10', section: 'unit2', tag: 'Test Q13', title: 'Graph Gauntlet',
-  blurb: 'One velocity graph, five questions: distance, average speed, displacement, average velocity, position graph.',
+  blurb: 'One velocity graph: distances, average speed, displacement, average velocity, and the position graph, the answer key\'s way.',
   steps: [
-    (el, api) => WORK(el, api, { media: q13V, q: 'First, the total <b>distance</b> traveled (ignore direction).', eq: 'dist', form: 'd = d<sub>1</sub> + d<sub>2</sub>', plug: 'd = ([[3]] m/s)([[4]] s) + ([[1]] m/s)([[8]] s)', lhs: 'd =', ans: 20, unit: 'm', finalLine: 'd = 12 m + 8 m = 20 m', hint: 'Part 1: 3 m/s for 4 s. Part 2: 1 m/s (backward) for 8 s. Distance uses sizes only.' }),
-    (el, api) => WORK(el, api, { media: q13V, q: 'Calculate the <b>average speed</b> for the whole motion.', eq: 'savg', plug: 's<sub>avg</sub> = [[20]] m / [[12]] s', ans: 1.67, tol: 0.011, unit: 'm/s', finalLine: 's<sub>avg</sub> = 1.67 m/s' }),
-    (el, api) => WORK(el, api, { media: q13V, q: 'Now the <b>displacement</b> (direction counts).', eq: 'area', form: '&Delta;x = v<sub>1</sub>t<sub>1</sub> + v<sub>2</sub>t<sub>2</sub>', plug: '&Delta;x = ([[3]] m/s)([[4]] s) + ([[-1]] m/s)([[8]] s)', lhs: '&Delta;x =', ans: 4, unit: 'm', finalLine: '&Delta;x = 12 m + (-8 m) = 4 m', hint: 'The second part is below the axis, so its area counts as negative.' }),
-    (el, api) => WORK(el, api, { media: q13V, q: 'Calculate the <b>average velocity</b> for the whole motion.', eq: 'vavg', plug: 'v<sub>avg</sub> = [[4]] m / [[12]] s', ans: 0.33, tol: 0.011, unit: 'm/s', finalLine: 'v<sub>avg</sub> = 0.33 m/s', after: 'Average velocity uses displacement (4 m). Average speed uses distance (20 m). That\'s why they\'re different.' }),
+    (el, api) => WORK(el, api, { media: q13V, ctx: 'Average speed needs the total distance. Like the answer key, find each part\'s distance first.', q: 'Part 1 (0-4 s at 3 m/s): find d<sub>1</sub>.', eq: 'savg', form: 's<sub>1</sub> = d<sub>1</sub> / t<sub>1</sub>', plug: '[[3]] m/s = d<sub>1</sub> / [[4]] s', lhs: 'd<sub>1</sub> =', ans: 12, unit: 'm', finalLine: 'd<sub>1</sub> = 12 m' }),
+    (el, api) => WORK(el, api, { media: q13V, q: 'Part 2 (4-12 s at 1 m/s backward): find d<sub>2</sub>. Distance uses speed, so no minus sign.', eq: 'savg', form: 's<sub>2</sub> = d<sub>2</sub> / t<sub>2</sub>', plug: '[[1]] m/s = d<sub>2</sub> / [[8]] s', lhs: 'd<sub>2</sub> =', ans: 8, unit: 'm', finalLine: '8 m = d<sub>2</sub>', hint: 'Part 2 lasts 12 - 4 = 8 s.' }),
+    (el, api) => WORK(el, api, { media: q13V, q: 'Average speed for the whole motion: d<sub>T</sub> = 12 m + 8 m = 20 m, t<sub>T</sub> = 12 s.', eq: 'savg', plug: 's<sub>avg</sub> = [[20]] m / [[12]] s', ans: 1.67, tol: 0.011, unit: 'm/s', finalLine: 's<sub>avg</sub> = 1.67 m/s', after: keyFor('13a') }),
+    (el, api) => WORK(el, api, { media: q13V, ctx: 'Average velocity needs displacement. Part 1 moves forward, so &Delta;x<sub>1</sub> = +12 m (same as d<sub>1</sub>).', q: 'Part 2: find &Delta;x<sub>2</sub>. Direction counts now: v<sub>2</sub> = -1 m/s.', eq: 'vavg', form: 'v<sub>2</sub> = &Delta;x<sub>2</sub> / t<sub>2</sub>', plug: '[[-1]] m/s = &Delta;x<sub>2</sub> / [[8]] s', lhs: '&Delta;x<sub>2</sub> =', ans: -8, unit: 'm', finalLine: '-8 m = &Delta;x<sub>2</sub>', signMsg: 'Right size! But it moves backward (below the axis), so &Delta;x<sub>2</sub> is negative.' }),
+    (el, api) => WORK(el, api, { media: q13V, q: 'Average velocity for the whole motion: &Delta;x<sub>T</sub> = 12 m + (-8 m) = 4 m, t<sub>T</sub> = 12 s.', eq: 'vavg', plug: 'v<sub>avg</sub> = [[4]] m / [[12]] s', ans: 0.33, tol: 0.011, unit: 'm/s', finalLine: 'v<sub>avg</sub> = 0.33 m/s', after: 'Average velocity uses displacement (4 m). Average speed uses distance (20 m). That\'s why they\'re different.' + keyFor('13b') }),
     (el, api) => GRAPHDRAW(el, api, {
       media: q13V, q: 'Draw the position vs. time graph for this motion (start at 0 m).', x: [0, 12, 1], y: [0, 14, 2], snap: [1, 1], yl: 'x - position (m)',
       pts: [[0, 0], [4, 12], [12, 4]], hint: 'Rises 3 m every second for 4 s, then drops 1 m every second until 12 s.',
-      explain: 'Up to 12 m at 4 s (slope +3), then down to 4 m at 12 s (slope -1).',
+      explain: 'Up to 12 m at 4 s (slope +3), then down to 4 m at 12 s (slope -1).' + keyFor('13c'),
     }),
-    (el, api) => WORK(el, api, { media: q13V, q: 'What is the displacement from 7 s to 10 s?', eq: 'area', plug: '&Delta;x = ([[-1]] m/s)([[3]] s)', lhs: '&Delta;x =', ans: -3, unit: 'm', finalLine: '&Delta;x = -3 m' }),
+    (el, api) => WORK(el, api, { media: q13V, q: 'What is the displacement from 7 s to 10 s?', eq: 'vavg', form: 'v = &Delta;x / t', plug: '[[-1]] m/s = &Delta;x / [[3]] s', lhs: '&Delta;x =', ans: -3, unit: 'm', finalLine: '-3 m = &Delta;x', after: keyFor('13d') }),
   ],
 });
 

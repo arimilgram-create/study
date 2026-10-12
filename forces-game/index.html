@@ -329,6 +329,21 @@ input[type=range]{width:100%;accent-color:var(--f-a)}
 @keyframes lid{to{transform:translateY(-26px) rotate(-14deg);opacity:0}}
 @keyframes flashout{from{opacity:1}to{opacity:0}}
 
+/* answer key */
+.keywork{display:flex;flex-direction:column;gap:2px;margin-top:10px;padding:8px 0 4px 12px;border-left:4px solid var(--pen)}
+.kw-label{font:700 .7rem var(--body);text-transform:uppercase;letter-spacing:.14em;color:var(--pen)}
+.kline{font-family:var(--hand);color:var(--pen);font-size:1.4rem;line-height:1.25;overflow-wrap:anywhere}
+.keyrow{margin:12px 0 0}
+.key-list{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.key-card{background:var(--card);border:2px solid var(--edge);border-radius:var(--r);padding:14px 16px;box-shadow:4px 4px 0 var(--shade);scroll-margin-top:80px}
+.key-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.key-head h3{font-size:1.1rem;flex:1;min-width:0}
+.key-head .tag{font-family:var(--mono);font-size:.8rem;background:var(--hi);color:var(--on-hi);padding:2px 8px;border-radius:6px}
+.key-part{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:10px 0;border-top:1px dashed var(--line)}
+.key-q{max-width:70ch}
+.key-work{display:flex;flex-direction:column;gap:2px;padding:4px 0 0 12px;border-left:4px solid var(--pen);width:100%}
+.key-graphs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:6px;max-width:760px}
+
 /* cosmetic arrow skins */
 .laser{animation:dash .6s linear infinite}
 .plasma{animation:plasma 1.1s ease-in-out infinite}
@@ -378,6 +393,7 @@ input[type=range]{width:100%;accent-color:var(--f-a)}
 <script src="js/levels-c.js"></script>
 <script src="js/extra.js"></script>
 <script src="js/boss.js"></script>
+<script src="js/answerkey.js"></script>
 <script src="js/unit2a.js"></script>
 <script src="js/unit2b.js"></script>
 <script src="js/shop.js"></script>

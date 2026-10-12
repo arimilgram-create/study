@@ -22,6 +22,11 @@ values with units, (3) answer with units. You can't skip to the answer, and you 
 | Graph Gauntlet | Q13 | Average speed vs average velocity, draw the position graph |
 | Constant Velocity Showdown | All | Timed test-day boss, Lock In calculations |
 
+Every Test Review question shows the teacher's answer-key work after you answer, and the
+**Answer Key** page (button on the map) lists every question with a "Show work" toggle so you can
+try it on paper first. Calculations follow the key's method (e.g. Larry's displacement as
+v = Δx / t for each part, then the total).
+
 ### Quiz Review: Forces, FBDs & First Law
 
 | Station | Review question | What you do |

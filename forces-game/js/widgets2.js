@@ -11,6 +11,8 @@ const EQS = {
   dist: 'd = d<sub>1</sub> + d<sub>2</sub> + ...',
   dFg: '&Delta;F<sub>g</sub> = F<sub>g,final</sub> - F<sub>g,initial</sub>',
   area: '&Delta;x = v &middot; t (area under a v-t graph)',
+  dm: '&Delta;m = m<sub>f</sub> - m<sub>i</sub>',
+  dxsum: '&Delta;x<sub>T</sub> = &Delta;x<sub>1</sub> + &Delta;x<sub>2</sub> + ...',
 };
 const UNITS = ['N', 'kg', 'N/kg', 'm', 's', 'm/s'];
 const LOCK_LINES = ['Equation first. Every time.', 'Write it like the test is tomorrow.', 'No equation, no points. Lock in.', 'Equation, plug in, answer with units.', 'This is how you get full credit.', 'Show the work. Get the points.'];

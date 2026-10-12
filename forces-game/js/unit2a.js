@@ -58,7 +58,7 @@ Game.add({
         { t: 'Both', why: 'It\'s one or the other. Having a direction makes it a vector.' },
         { t: 'Neither, it\'s a force', why: 'Velocity isn\'t a force. It\'s how fast and which way something moves.' },
       ],
-      explain: 'Vector = magnitude + direction. Speed is the scalar version of velocity (no direction).',
+      explain: 'Vector = magnitude + direction. Speed is the scalar version of velocity (no direction).' + keyFor('1a'),
     }),
     vectorLab,
     (el, api) => MCQ(el, api, {
@@ -69,7 +69,7 @@ Game.add({
         { t: 'Magnitude = the area under the line.', why: 'Area isn\'t velocity on a position graph. Use the slope.' },
         { t: 'Read the last point on the graph.', why: 'The last point is just where it ended up (position).' },
       ],
-      explain: 'On an x-t graph, velocity = slope = &Delta;x / &Delta;t. Steeper = faster; downhill = negative direction.',
+      explain: 'On an x-t graph, velocity = slope = &Delta;x / &Delta;t. Steeper = faster; downhill = negative direction.' + keyFor('1b'),
     }),
     (el, api) => MCQ(el, api, {
       q: 'How do you find velocity\'s magnitude and direction from a <b>velocity-time</b> graph?',
@@ -79,14 +79,14 @@ Game.add({
         { t: 'You can\'t get direction from a velocity graph.', why: 'You can: above the axis is +, below is -.' },
         { t: 'Direction = whether the line goes up or down.', why: 'A line going down but still above the axis is still a + velocity, just getting smaller.' },
       ],
-      explain: 'Read the value straight off the graph: its size is the magnitude, its sign is the direction.',
+      explain: 'Read the value straight off the graph: its size is the magnitude, its sign is the direction.' + keyFor('1c'),
     }),
     (el, api) => { const d = pick([[24, 6], [30, 5], [18, 3], [45, 9]]); return WORK(el, api, {
       ctx: 'Test Q1d asks you to make up a velocity word problem. Here\'s one, solved the way the test wants it.',
       q: `A skateboarder rolls <b>${d[0]} m to the left</b> in ${d[1]} s. What is her velocity?`,
       eq: 'vavg', form: 'v<sub>avg</sub> = &Delta;x / t', plug: `v<sub>avg</sub> = [[${-d[0]}]] m / [[${d[1]}]] s`, ans: -d[0] / d[1], unit: 'm/s',
       signMsg: 'Right size! But she went LEFT, so &Delta;x is negative and so is v.',
-      after: `Direction showed up as the minus sign on &Delta;x (left = -). That made the velocity -${d[0] / d[1]} m/s: ${d[0] / d[1]} m/s to the left.`,
+      after: `Direction showed up as the minus sign on &Delta;x (left = -). That made the velocity -${d[0] / d[1]} m/s: ${d[0] / d[1]} m/s to the left.${keyFor('1d')}`,
     }); },
   ],
 });
@@ -116,8 +116,14 @@ Game.add({
   id: 'v2', section: 'unit2', tag: 'Test Q2', title: 'Tom the Cat',
   blurb: 'A 4.5 kg cat: his weight, lifting him at constant velocity, and a trip to Pluto.',
   steps: [
-    (el, api) => WORK(el, api, { q: 'Tom is a 4.5 kg cat. Calculate his weight on Earth.', eq: 'Fg', plug: 'F<sub>g</sub> = [[4.5]] kg &middot; ([[-10]] N/kg)', ans: -45, unit: 'N', finalLine: 'F<sub>g</sub> = -45 N' }),
+    (el, api) => WORK(el, api, { q: 'Tom is a 4.5 kg cat. Calculate his weight on Earth.', eq: 'Fg', plug: 'F<sub>g</sub> = [[4.5]] kg &middot; ([[-10]] N/kg)', ans: -45, unit: 'N', finalLine: 'F<sub>g</sub> = -45 N', after: keyFor('2a') }),
     catLift,
+    (el, api) => WORK(el, api, {
+      q: 'Show the work: what applied force holds Tom at rest, or lifts him at a constant 2 m/s?', eq: 'net', form: 'F<sub>net</sub> = F<sub>A</sub> + F<sub>g</sub>',
+      plug: '[[0]] N = F<sub>A</sub> + ([[-45]] N)', lhs: 'F<sub>A</sub> =', ans: 45, unit: 'N', finalLine: '45 N = F<sub>A</sub>',
+      signMsg: 'Right size! You push UP on Tom, so it\'s positive.', hint: 'At rest or constant velocity, F<sub>net</sub> = 0. Put 0 on the left.',
+      after: 'F<sub>net</sub> = 0 for rest AND for constant velocity, so it\'s the same 45 N either way.',
+    }),
     (el, api) => MCQ(el, api, {
       q: 'Compared to holding Tom at rest, how much <b>more</b> applied force does it take to lift him at a constant velocity of 2 m/s?',
       opts: [
@@ -126,23 +132,18 @@ Game.add({
         { t: '45 N more (90 N total)', why: '90 N up vs 45 N down would make him speed up, not move at a constant velocity.' },
         { t: 'Just a tiny bit more, like 46 N', why: 'Only to <i>start</i> him moving. Once he\'s at a constant 2 m/s, it\'s exactly 45 N.' },
       ],
-      explain: 'At rest and at constant velocity, &Sigma;F = 0, so F<sub>A</sub> = 45 N both times.',
+      explain: 'At rest and at constant velocity, &Sigma;F = 0, so F<sub>A</sub> = 45 N both times.' + keyFor('2b'),
     }),
-    (el, api) => MCQ(el, api, {
-      ctx: 'I took Tom the cat to Pluto, where g = -0.63 N/kg.', q: 'What is Tom\'s change in mass?',
-      opts: [
-        { t: '0 kg. He\'s still 4.5 kg.', ok: true },
-        { t: 'He loses about 4.2 kg', why: 'Mass is the amount of cat. That doesn\'t change by moving him.' },
-        { t: 'He gains mass', why: 'Mass doesn\'t depend on location.' },
-        { t: 'His mass becomes 0.63 kg', why: '0.63 is Pluto\'s gravitational field, in N/kg.' },
-      ],
-      explain: 'Change in mass = 0 kg. Only his weight changes.',
-    }),
-    (el, api) => WORK(el, api, { q: 'Calculate Tom\'s weight on Pluto (g = -0.63 N/kg).', eq: 'Fg', plug: 'F<sub>g</sub> = [[4.5]] kg &middot; ([[-0.63]] N/kg)', ans: -2.835, tol: 0.01, unit: 'N', finalLine: 'F<sub>g</sub> = -2.835 N' }),
+    (el, api) => WORK(el, api, { q: 'Calculate Tom\'s weight on Pluto (g = -0.63 N/kg).', eq: 'Fg', plug: 'F<sub>g</sub> = [[4.5]] kg &middot; ([[-0.63]] N/kg)', ans: -2.835, tol: 0.01, unit: 'N', finalLine: 'F<sub>g</sub> = -2.835 N', ctx: 'I took Tom the cat to Pluto, where g = -.63 N/kg.', after: keyFor('2c1') }),
     (el, api) => WORK(el, api, {
       q: 'Now calculate Tom\'s <b>change in weight</b> from Earth (-45 N) to Pluto (-2.835 N).',
       eq: 'dFg', form: '&Delta;F<sub>g</sub> = F<sub>g,Pluto</sub> - F<sub>g,Earth</sub>', plug: '&Delta;F<sub>g</sub> = [[-2.835]] N - ([[-45]] N)', ans: 42.165, tol: 0.01, unit: 'N', absOk: true,
-      finalLine: '&Delta;F<sub>g</sub> = 42.165 N', after: 'Positive because his weight got <i>less negative</i>: its size dropped by 42.165 N, from 45 N to 2.835 N.',
+      finalLine: '&Delta;F<sub>g</sub> = 42.165 N', after: 'Positive because his weight got <i>less negative</i>: its size dropped by 42.165 N, from 45 N to 2.835 N.' + keyFor('2c2'),
+    }),
+    (el, api) => WORK(el, api, {
+      q: 'Calculate Tom\'s <b>change in mass</b> from Earth to Pluto.', eq: 'dm', form: '&Delta;m = m<sub>f</sub> - m<sub>i</sub>',
+      plug: '&Delta;m = [[4.5]] kg - [[4.5]] kg', lhs: '&Delta;m =', ans: 0, unit: 'kg', finalLine: '&Delta;m = 0 kg (no change)',
+      after: 'Mass is the amount of cat. Moving him doesn\'t change it.' + keyFor('2c3'),
     }),
   ],
 });
@@ -160,7 +161,7 @@ Game.add({
         { t: 'c.', svg: sheetGraph([[19, 49, 96, 74]]), ok: true },
         { t: 'd.', svg: sheetGraph([[22, 36, 92, 14]]), why: 'Changing, but above the axis, so positive.' },
       ],
-      explain: 'Graph c is below the axis (negative) and keeps getting farther from it (magnitude increasing).',
+      explain: 'Graph c is below the axis (negative) and keeps getting farther from it (magnitude increasing).' + keyFor('3'),
     }),
     (el, api) => MCQ(el, api, {
       q: 'Which position graph shows a <b>constant positive</b> velocity?', keepOrder: true,
@@ -170,7 +171,7 @@ Game.add({
         { t: 'c.', svg: sheetGraph([[16, 36, 90, 36]], 69, 16, 'x'), why: 'Flat position line = not moving (v = 0).' },
         { t: 'd.', svg: sheetGraph([[16, 70, 90, 70]], 39, 16, 'x'), why: 'Flat again: at rest, just at a negative position.' },
       ],
-      explain: 'Straight uphill line on an x-t graph = constant positive velocity.',
+      explain: 'Straight uphill line on an x-t graph = constant positive velocity.' + keyFor('4'),
     }),
     (el, api) => MCQ(el, api, {
       ctx: 'Victoria looks at this cart\'s free body diagram (only F<sub>N</sub> up and F<sub>g</sub> down, equal size) and says its position graph <b>must</b> be a flat line, at rest.',
@@ -182,23 +183,23 @@ Game.add({
         { t: 'Only if it\'s slowing down.', why: 'Slowing down needs an unbalanced force. These forces are balanced.' },
         { t: 'Only if it\'s speeding up.', why: 'Speeding up needs an unbalanced force too.' },
       ],
-      explain: 'Balanced forces = no change in velocity. It could be at rest, or rolling at a constant velocity (like on a frictionless track).',
+      explain: 'Balanced forces = no change in velocity. It could be at rest, or rolling at a constant velocity (like on a frictionless track).' + keyFor('6b'),
     }),
     (el, api) => GRAPHDRAW(el, api, {
       q: 'Draw a position graph that also works for Victoria\'s cart, but is <b>not</b> at rest.', mode: 'anyLine',
       x: [0, 10, 1], y: [0, 10, 1], yl: 'x - position (m)', tip: 'Tap two or more points to draw your line.',
       hint: 'Constant velocity means one straight line that is not flat.',
-      explain: 'Any straight, sloped line works. It means constant velocity, which balanced forces allow. Victoria\'s flat line works too: it\'s just the v = 0 case.',
+      explain: 'Any straight, sloped line works. It means constant velocity, which balanced forces allow. Victoria\'s flat line works too: it\'s just the v = 0 case.' + keyFor('6a'),
     }),
     (el, api) => MCQ(el, api, {
       q: 'What do the <b>velocity</b> graphs look like for Victoria\'s motion (at rest) and yours (constant velocity)?',
       opts: [
-        { t: 'Hers: flat ON the t-axis (v = 0). Yours: flat line above or below the axis.', ok: true, svg: sheetGraph([[20, 42, 94, 42], [20, 24, 94, 24]]) },
+        { t: 'Hers: flat ON the t-axis (v = 0). Yours: flat line above or below the axis (the key\'s is below, since its line slopes down).', ok: true, svg: sheetGraph([[20, 42, 94, 42], [20, 60, 94, 60]]) },
         { t: 'Both are sloped lines.', why: 'Sloped v-t lines mean changing velocity. Both of these motions have constant velocity.', svg: sheetGraph([[20, 60, 94, 20], [20, 42, 94, 10]]) },
         { t: 'Hers flat at 0. Yours slopes upward.', why: 'Yours has constant velocity, so its v-t line is flat too.', svg: sheetGraph([[20, 42, 94, 42], [20, 60, 94, 12]]) },
         { t: 'They look the same as the position graphs.', why: 'A sloped x-t line becomes a flat v-t line.', svg: sheetGraph([[20, 30, 94, 30], [20, 70, 94, 20]]) },
       ],
-      explain: 'Constant velocity on a v-t graph is always a flat line. At rest = flat line on the axis.',
+      explain: 'Constant velocity on a v-t graph is always a flat line. At rest = flat line on the axis.' + keyFor('6c'),
     }),
   ],
 });
@@ -217,7 +218,7 @@ Game.add({
         { t: 'c. No friction', svg: miniFBD({ up: ['FN', 42], down: ['Fg', 42], right: ['Feng', 52] }), why: 'The water resists the boat. With no friction the engine would keep speeding it up.' },
         { t: 'd. All four balanced', svg: miniFBD({ up: ['FN', 42], down: ['Fg', 42], right: ['Feng', 50], left: ['Ff', 50] }), ok: true },
       ],
-      explain: 'Constant 15 m/s = balanced. Engine forward equals friction backward; the water\'s push up equals gravity.',
+      explain: 'Constant 15 m/s = balanced. Engine forward equals friction backward; the water\'s push up equals gravity.' + keyFor('5a'),
     }),
     (el, api) => motionPlayer(el, api, {
       q: 'Watch the trip across the 600 m lake and both graphs being drawn.',
@@ -228,17 +229,17 @@ Game.add({
     (el, api) => WORK(el, api, {
       q: 'Calculate how long it takes her to drive across the 600 m wide lake at 15 m/s.',
       eq: 'vavg', form: 'v<sub>avg</sub> = &Delta;x / t', plug: '[[15]] m/s = [[600]] m / t', lhs: 't =', ans: 40, unit: 's', finalLine: 't = 40 s',
-      after: 'Rearranged: t = &Delta;x / v = 600 m / 15 m/s = 40 s.',
+      after: keyFor('5b'),
     }),
     (el, api) => GRAPHDRAW(el, api, {
       q: 'Draw the <b>position-time</b> graph for her trip across.', x: [0, 50, 5], y: [0, 700, 100], snap: [5, 50], yl: 'x - position (m)',
       pts: [[0, 0], [40, 600]], hint: 'Where is she at t = 0? Where is she when she arrives?',
-      explain: 'A straight line from (0 s, 0 m) to (40 s, 600 m). Slope = 600 m / 40 s = 15 m/s.',
+      explain: 'A straight line from (0 s, 0 m) to (40 s, 600 m). Slope = 600 m / 40 s = 15 m/s.' + keyFor('5c'),
     }),
     (el, api) => GRAPHDRAW(el, api, {
       q: 'Now draw the <b>velocity-time</b> graph for the same trip.', x: [0, 50, 5], y: [0, 20, 5], snap: [5, 2.5], yl: 'v - velocity (m/s)',
       pts: [[0, 15], [40, 15]], hint: 'Her velocity is the same the whole time she crosses.',
-      explain: 'A flat line at 15 m/s from 0 to 40 s.',
+      explain: 'A flat line at 15 m/s from 0 to 40 s.' + keyFor('5c'),
     }),
     (el, api) => MCQ(el, api, {
       q: 'On the way back she travels <b>1/4 as fast</b>. How does the return time proportionally compare to the first trip?',
@@ -248,7 +249,7 @@ Game.add({
         { t: 'The same time', why: 'Same distance at a lower speed takes longer.' },
         { t: '2 times as long', why: 'Speed and time are inversely proportional: 1/4 the speed means 4x the time.' },
       ],
-      explain: 'Same distance: time is inversely proportional to speed. 1/4 the speed = 4x the time.<span class="eq">t = 600 m / 3.75 m/s = 160 s</span>',
+      explain: 'Same distance: time is inversely proportional to speed. 1/4 the speed = 4x the time.<span class="eq">t = 600 m / 3.75 m/s = 160 s</span>' + keyFor('5d'),
     }),
   ],
 });
@@ -278,12 +279,12 @@ Game.add({
     (el, api) => MCQ(el, api, {
       q: 'CeeCee runs 1.25 times faster than Molly in the 600 m race. How do their finishing times compare?',
       opts: [
-        { t: 'CeeCee\'s time is 1/1.25 = 0.8 of Molly\'s. (Molly takes 1.25x as long.)', ok: true },
+        { t: 'CeeCee completes the race in 1.25x less time (her time = Molly\'s time &divide; 1.25, which is 0.8 of it).', ok: true },
         { t: 'CeeCee\'s time is 1.25x Molly\'s.', why: 'Faster runner = shorter time. You flipped it.' },
         { t: 'They finish at the same time.', why: 'Same distance, different speeds, different times.' },
         { t: 'CeeCee finishes 1.25 seconds sooner.', why: 'It\'s a ratio, not a fixed number of seconds.' },
       ],
-      explain: 'Same distance: time is inversely proportional to speed. t<sub>CeeCee</sub> = t<sub>Molly</sub> / 1.25 = 0.8 t<sub>Molly</sub>.',
+      explain: 'Same distance: time is inversely proportional to speed. t<sub>CeeCee</sub> = t<sub>Molly</sub> / 1.25 = 0.8 t<sub>Molly</sub>.' + keyFor('7'),
     }),
     (el, api) => MCQ(el, api, {
       q: 'Sally runs to the store, then walks back home. The trip to the store takes 1/5 the time of the walk home. Compare the magnitudes of her velocities.',
@@ -293,13 +294,13 @@ Game.add({
         { t: 'They\'re the same.', why: 'Same distance, but different times means different speeds.' },
         { t: '25 times bigger.', why: 'It\'s directly the inverse of the time ratio: 5x.' },
       ],
-      explain: 'Same distance, 1/5 the time = 5x the speed. (The directions are opposite, so the velocities have opposite signs.)',
+      explain: 'Same distance, 1/5 the time = 5x the speed. (The directions are opposite, so the velocities have opposite signs.)' + keyFor('10'),
     }),
     (el, api) => WORK(el, api, {
       q: 'Enid drives the space shuttle at 7000 m/s. How long will it take her to get to the Moon, 384,000,000 m away?',
-      eq: 'vavg', form: 'v<sub>avg</sub> = &Delta;x / t', plug: '[[7000]] m/s = [[384000000]] m / t', lhs: 't =', ans: 54857.14, tol: 1, unit: 's',
+      eq: 'savg', form: 's = d / t', plug: '[[7000]] m/s = [[384000000]] m / t', lhs: 't =', ans: 54857.14, tol: 1, unit: 's',
       finalLine: 't = 54,857 s', hint: 'Rearrange: t = &Delta;x / v. Then divide.',
-      after: 'That\'s about 15.2 hours (54,857 s / 3600 s per hour).',
+      after: 'That\'s about 15.2 hours.' + keyFor('11'),
     }),
   ],
 });
