@@ -37,7 +37,7 @@ Game.add({
         { t: 'Turning a corner at a steady speed', ok: true },
         { t: 'Cruising at a constant 60 mi/hr in a straight line', why: 'Constant velocity means no acceleration.' },
         { t: 'Sitting still at a red light', why: 'At rest with no change in velocity, there is no acceleration.' },
-        { t: 'Rolling down a track at a steady speed', why: 'Steady speed in a straight line is not accelerating.' },
+        { t: 'Rolling along a straight track at a steady speed', why: 'Steady speed in a straight line is not accelerating.' },
       ],
       explain: 'Speeding up, slowing down, and turning are all accelerating, because the <b>velocity changes</b>. Velocity includes direction, so turning counts.',
     }),

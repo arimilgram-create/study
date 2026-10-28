@@ -70,23 +70,27 @@ Game.add({
     }),
     (el, api) => MCQ(el, api, {
       q: 'An object is accelerating if it is moving...',
+      keepOrder: true,
       opts: [
-        { t: 'with changing speed, or in a circle', ok: true },
-        { t: 'extremely fast', why: 'Speed alone doesn\'t mean acceleration. It has to be changing.' },
-        { t: 'with constant velocity', why: 'Constant velocity means no change, so no acceleration.' },
-        { t: 'downward', why: 'Moving down at a steady speed isn\'t accelerating.' },
+        { t: 'A. with changing speed', why: 'That\'s true, but B is true too. Pick the choice that includes both.' },
+        { t: 'B. in a circle', why: 'That\'s true, but A is true too. Pick the choice that includes both.' },
+        { t: 'C. extremely fast', why: 'Speed alone doesn\'t mean acceleration. It has to be changing.' },
+        { t: 'D. with constant velocity', why: 'Constant velocity means no change, so no acceleration.' },
+        { t: 'E. Both A and B', ok: true },
       ],
-      explain: 'Changing speed or changing direction (going around a circle) are both acceleration.',
+      explain: 'Changing speed (A) and changing direction, like going in a circle (B), are both acceleration. When more than one choice is true, pick the one that includes them all.',
     }),
     (el, api) => MCQ(el, api, {
-      q: 'If an object is NOT accelerating, you know for sure it is...',
+      q: 'An object is NOT accelerating. Which of these could it be doing?',
+      keepOrder: true,
       opts: [
-        { t: 'maintaining a constant velocity', ok: true },
-        { t: 'at rest', why: 'At rest is one possibility, but a steady straight-line motion is also not accelerating.' },
-        { t: 'moving with a constant speed', why: 'Constant speed around a circle is still accelerating, because the direction is changing.' },
-        { t: 'slowing down', why: 'Slowing down IS accelerating.' },
+        { t: 'A. sitting at rest', why: 'That\'s true, but B is true too. Pick the choice that includes both.' },
+        { t: 'B. moving in a straight line at a steady speed', why: 'That\'s true, but A is true too. Pick the choice that includes both.' },
+        { t: 'C. going around a circle at a steady speed', why: 'The direction keeps changing, so the velocity changes. That is accelerating.' },
+        { t: 'D. slowing down', why: 'Slowing down IS accelerating.' },
+        { t: 'E. Both A and B', ok: true },
       ],
-      explain: 'No acceleration means constant velocity: the same speed in the same straight-line direction (rest is a special case).',
+      explain: 'Not accelerating means the velocity is constant. At rest is a constant velocity of 0, and steady straight-line motion is constant too. So if something isn\'t accelerating, the only thing you know for sure is that its velocity is constant.',
     }),
     (el, api) => MCQ(el, api, {
       q: 'An object with an acceleration of 10 m/s² will...',
@@ -458,7 +462,7 @@ const BOSS4_GENS = [
   () => ({ mcq: { q: 'A line below the axis that moves away from the axis means...', opts: [{ t: 'moving backward and speeding up', ok: true }, { t: 'moving backward and slowing down', why: 'Moving away from the axis means speeding up.' }, { t: 'moving forward and speeding up', why: 'Below the axis is backward.' }, { t: 'constant velocity', why: 'A sloped line means changing velocity.' }], explain: 'Below = -. Away from the axis = speeding up.' } }),
   () => ({ mcq: { q: 'A skydiver reaches terminal velocity. The forces on him are...', opts: [{ t: 'balanced, with air resistance equal to his weight', ok: true }, { t: 'unbalanced, with gravity bigger', why: 'Then he would still be speeding up.' }, { t: 'unbalanced, with air resistance bigger', why: 'Then he would be slowing down.' }, { t: 'zero, because he is falling', why: 'Falling doesn\'t mean no forces.' }], explain: 'Constant velocity means ΣF = 0.' } }),
   () => ({ mcq: { q: 'Which units make a = ΣF / m come out in m/s²?', opts: [{ t: 'N and kg', ok: true }, { t: 'm and s', why: 'Those are distance and time.' }, { t: 'kg and s', why: 'Mass and time don\'t give acceleration.' }, { t: 'N and s', why: 'Time isn\'t in the denominator.' }], explain: '1 N = 1 kg·m/s², so N ÷ kg = m/s².' } }),
-  () => ({ mcq: { q: 'A velocity-time graph has a flat line on the t-axis, at zero. The object is...', opts: [{ t: 'at rest, with no net force', ok: true }, { t: 'speeding up', why: 'Speeding up means the line rises.' }, { t: 'moving at a constant speed', why: 'Constant speed is a flat line away from zero.' }, { t: 'slowing down', why: 'Slowing down means the line falls toward zero.' }], explain: 'Flat on the axis = at rest = no net force.' } }),
+  () => ({ mcq: { q: 'A velocity-time graph has a flat line on the t-axis, at zero. The object is...', opts: [{ t: 'at rest, with no net force', ok: true }, { t: 'speeding up', why: 'Speeding up means the line rises.' }, { t: 'moving at a steady speed (not zero)', why: 'A steady speed that isn\'t zero is a flat line above or below the axis, not on it.' }, { t: 'slowing down', why: 'Slowing down means the line falls toward zero.' }], explain: 'Flat on the axis = at rest = no net force.' } }),
   () => { const m = pick([0.5, 2, 5]); return { num: { q: `What is the weight of a ${m} kg object? (g = 10 m/s²)`, ans: -10 * m, unit: 'N', explain: eqs('F<sub>g</sub> = m · g', `F<sub>g</sub> = ${m} kg · (-10 m/s²)`, `F<sub>g</sub> = ${-10 * m} N`) } }; },
 ];
 Game.add({
