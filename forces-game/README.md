@@ -93,6 +93,14 @@ for rarer drops. x5 and x10 open as a card grid.
 shown (96% on every setting). Mines has 1 to 20 mines. Coin Ladder doubles down on each correct call.
 Chips convert to spendable XP at 1 chip = 1 XP (rank still comes from studying).
 
+**Vector art (v3):** `js/art.js` holds 524 vector items from [OpenMoji](https://openmoji.org), licensed
+CC BY-SA 4.0. They include 40 outfits, 7 hats, 126 animal sidekicks, and 351 charms. Hats, outfits, and
+sidekicks appear on your character. Every item shows its vector in the locker, shop, and drop cards.
+The art is generated from the OpenMoji color SVG set, so don't edit it by hand.
+
+**Cheaper cases (v3):** Pocket Case (40 XP or 30 chips) and Lab Case (90 XP or 50 chips). Both still
+return less than they cost, even with the perk bonus maxed.
+
 **Cases, casino and character:** XP you earn (or casino chips) buys cases in the Case Shop (Rest, Velocity,
 Momentum and Newton) holding 67 cosmetics across 5 rarities, with shiny variants. Open 1 or 5 at a time.
 Trade items in for chips at the Casino and play Gravity Plinko, Rocket Crash or Coin Flip (play chips only). Build your character in the Character screen and equip items

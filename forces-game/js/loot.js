@@ -9,9 +9,15 @@ const chipValue = (it, shiny) => CHIP_VALUE[it.r] * (shiny ? 4 : 1);
 
 // ---------- cases ----------
 const CASES = [
+  { id: 'pocket', name: 'Pocket Case', price: 40, chips: 30, c: '--f-air', shiny: 1 / 20, bonus: 0.08,
+    blurb: 'The cheapest case. Commons and rares, with a small chance at a shiny.',
+    odds: { common: 85, rare: 15 } },
   { id: 'rest', name: 'Rest Case', price: 150, chips: 60, c: '--f-n', shiny: 1 / 14, bonus: 0.12,
     blurb: 'The starter case. Mostly commons, with a small shot at something shiny.',
     odds: { common: 70, rare: 22, epic: 6.5, legendary: 1.3, mythic: 0.2 } },
+  { id: 'lab', name: 'Lab Case', price: 90, chips: 50, c: '--f-eng', shiny: 1 / 15, bonus: 0.1,
+    blurb: 'Affordable lab kit. Mostly commons and rares, with a few epics.',
+    odds: { common: 60, rare: 30, epic: 10 } },
   { id: 'velocity', name: 'Velocity Case', price: 250, chips: 130, c: '--f-lift', shiny: 1 / 8, bonus: 0.14, isNew: true,
     pool: it => it.set === 'v',
     blurb: 'Only items from the Constant Velocity unit: Tom the Cat, Jayla\'s boat, the Space Shuttle, and more.',

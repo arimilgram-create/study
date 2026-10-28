@@ -8,7 +8,7 @@ const RARITY = {
   legendary: { name: 'Legendary', c: '--r-leg', refund: 180 },
   mythic: { name: 'Mythic', c: '--r-myth', refund: 400 },
 };
-const SLOTS = { hat: 'Hats', outfit: 'Outfits', pet: 'Sidekicks', title: 'Titles', arrow: 'Arrow skins', confetti: 'Confetti', bg: 'Backgrounds' };
+const SLOTS = { hat: 'Hats', outfit: 'Outfits', pet: 'Sidekicks', title: 'Titles', arrow: 'Arrow skins', confetti: 'Confetti', bg: 'Backgrounds', charm: 'Charms' };
 
 const ITEMS = [
   // hats
@@ -216,11 +216,14 @@ function avatarSVG(av, eq, crop) {
     `<circle cx="58" cy="98" r="9" fill="${skin}" ${ST}/><circle cx="142" cy="98" r="9" fill="${skin}" ${ST}/>` +
     `<circle cx="100" cy="92" r="42" fill="${skin}" ${ST}/>` +
     (eq.hat === 'helmet' || eq.hat === 'wig' ? '' : hairTop(av.hair, hc)) + faceSVG(av.eyes, av.mouth) +
-    shine(hatSVG(eq.hat), sh.hat) +
-    (eq.pet ? shine(`<g transform="translate(160 196)">${petSVG(eq.pet)}</g>`, sh.pet) : '') + '</svg>';
+    (artFor(eq.hat, 'head') ? artNest(eq.hat, 52, 4, 96, 96) : shine(hatSVG(eq.hat), sh.hat)) +
+    (artFor(eq.pet, 'pet') ? artNest(eq.pet, 150, 166, 46, 46) : (eq.pet ? shine(`<g transform="translate(160 196)">${petSVG(eq.pet)}</g>`, sh.pet) : '')) +
+    (artFor(eq.outfit, 'body') ? artNest(eq.outfit, 56, 140, 88, 88) : '') +
+    (artFor(eq.charm, 'charm') ? artNest(eq.charm, 4, 170, 36, 36) : '') + '</svg>';
 }
 // Icon for an item tile (HTML string).
 function itemIcon(it) {
+  if (ART[it.id]) return `<svg viewBox="0 0 72 72" class="vec" role="img" aria-label="${esc(it.name)}">${ART[it.id].svg}</svg>`;
   const av = Game.state.avatar;
   if (it.slot === 'hat') return avatarSVG(av, { hat: it.id }, 'head');
   if (it.slot === 'outfit') return avatarSVG(av, { outfit: it.id }, 'body');
