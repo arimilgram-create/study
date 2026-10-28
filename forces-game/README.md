@@ -6,7 +6,7 @@ A study game for the **Forces, Free Body Diagrams and First Law** quiz review an
 **Lock In (show your work):** every calculation makes you (1) pick the equation, (2) plug in the
 values with units, (3) answer with units. You can't skip to the answer, and you build a full-work streak.
 
-### Acceleration Packet (start here)
+### Acceleration Packet
 
 Everything from the acceleration packets, built from the unit summary.
 
@@ -41,6 +41,20 @@ force of friction alone.
 | 2nd Law Showdown | All | Timed boss from the whole unit, Lock In calculations |
 
 The unit summary has no answer key, so these answers are worked from the physics. Check them against your teacher's.
+
+### Summary Extras
+
+The unit summary items the other stations didn't cover yet, all in one section.
+
+| Station | What it covers |
+|---|---|
+| Vocab Check | Symbol and unit for a, what counts as accelerating, direction of acceleration, Newton's 2nd law in words |
+| Parallel vs Perpendicular | Same-line vectors add or subtract; right-angle vectors need R² = x² + y² |
+| The Change Formula | ΔQ = Q_f − Q_i for any quantity, with a negative example |
+| Hot Wheels Track | Physics Classroom Q10: velocity and acceleration at X, Y, and Z on the track |
+| Cart on a Hill | Net force direction going up (slowing), coming down (speeding up), and when your hand stops it |
+
+The cart on a hill uses direction questions instead of a full FBD, because the FBD builder only places forces up, down, left, or right and a normal force on a slope is perpendicular to the hill.
 
 ### Test Review: Balanced Forces & Constant Velocity
 

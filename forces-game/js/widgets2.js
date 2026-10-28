@@ -23,6 +23,7 @@ const EQS = {
   ma: '&Sigma;F = m &middot; a',
   vf: 'v<sub>f</sub> = v<sub>i</sub> + a &middot; t',
   dxsum: '&Delta;x<sub>T</sub> = &Delta;x<sub>1</sub> + &Delta;x<sub>2</sub> + ...',
+  dQ: '&Delta;Q = Q<sub>f</sub> - Q<sub>i</sub>',
 };
 const UNITS = ['N', 'kg', 'N/kg', 'm', 's', 'm/s', 'm/s²', '°', 'mi/hr', 'mi/hr/s'];
 const LOCK_LINES = ['Equation first. Every time.', 'Write it like the test is tomorrow.', 'No equation, no points. Lock in.', 'Equation, plug in, answer with units.', 'This is how you get full credit.', 'Show the work. Get the points.'];
