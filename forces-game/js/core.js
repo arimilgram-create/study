@@ -180,6 +180,7 @@ const Game = {
         h('div', { class: 'legend', html: Object.entries(FORCES).map(([k, f]) => `<span style="color:var(${f.c})">${f.label}</span>`).join('') })),
       h('section', { class: 'lockcard', html: `${lockSVG}<div><h2>Test-day rule: LOCK IN</h2><p>Points get lost for missing work. So here, every calculation makes you <b>write the equation</b>, <b>plug in the values with units</b>, then <b>answer with units</b>. You can't skip to the answer. Do it here and it'll be automatic on the test.</p><p class="mono">Full-work streak: ${s.workStreak}</p></div>` }),
       h('div', { class: 'row keyrow' }, h('button', { class: 'btn primary', onclick: () => this.answerKey() }, 'Answer key with all the work'), h('span', { class: 'hint' }, 'Your teacher\'s key for the test review, typed up. Try each question on paper first, then reveal the work.')),
+      ...section('accel', 'Acceleration Packet (start here)', 'The most important part: acceleration, v-t graphs, direction, word problems, Newton\'s 2nd law calculations, free body diagrams, and the fan cart lab. Built from the unit summary and your packets.'),
       ...section('unit3', 'Unit 3: 2nd Law & Acceleration', 'From the unit summary: vector addition, acceleration, v-t graphs, unbalanced FBDs, Newton\'s 2nd law, and multistep problems.'),
       ...section('unit2', 'Test Review: Balanced Forces & Constant Velocity', 'Your upcoming test. Graphs, velocity, displacement, normal force, and inertia.'),
       ...section('main', 'Quiz Review: Forces, FBDs & First Law', 'Questions 1-9 from the first review sheet.'),
@@ -261,4 +262,5 @@ const FORCES = {
   Flift: { label: 'F<sub>lift</sub>', sub: 'lift', name: 'Air lift (wings)', c: '--f-lift' },
   Feng: { label: 'F<sub>engine</sub>', sub: 'engine', name: 'Engine thrust', c: '--f-eng' },
   Fs: { label: 'F<sub>scale</sub>', sub: 'scale', name: 'Spring scale pull', c: '--f-s' },
+  Ften: { label: 'F<sub>tens</sub>', sub: 'tens', name: 'Tension (rope)', c: '--f-ten' },
 };

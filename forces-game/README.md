@@ -6,6 +6,29 @@ A study game for the **Forces, Free Body Diagrams and First Law** quiz review an
 **Lock In (show your work):** every calculation makes you (1) pick the equation, (2) plug in the
 values with units, (3) answer with units. You can't skip to the answer, and you build a full-work streak.
 
+### Acceleration Packet (start here)
+
+Everything from the acceleration packets, built from the unit summary.
+
+| Station | What it covers |
+|---|---|
+| Accelerating = Changing Velocity | Speeding up, slowing down, and turning; a = Δv / t with units (Ima Speedin, Porsche) |
+| Which Way Is the Acceleration? | Direction of a when speeding up vs. slowing down; Billy; the softball |
+| Speeding Up or Slowing Down? | Read four v-t graphs: velocity sign, speeding up or slowing, acceleration sign |
+| Acceleration from a v-t Graph | Slope on two parts of a graph, with the sign |
+| Acceleration Word Problems | Boat, softball, Anna, Tesla, Regina, Gronk (answers match the key) |
+| Fan Cart Lab | Predict the v-t graph, then run it: trials A to E, modeled on your lab sheet |
+| Newton's 2nd Law Calcs | ΣF = ma, proportional reasoning (Henry, dump truck, Nathan & Carla), friction, skydiver |
+| Newton's 2nd Law: Fill in the Blanks | Elephant, parachute, car, wheelbarrow, sled, cart from the Physics Classroom figures |
+| FBD Walkaround | Parachute, sliding block, cart and hanging mass, ball, string: speeding up or slowing down |
+| Classic Free Body Diagrams | Book, crate, sledder, ball at its peak, elevator, crate on rough floor |
+| Acceleration Showdown | Timed boss from the packet |
+
+Notes: the fan cart is a model (a = 0.25 × force, while the fan is on), not your real cart data. The
+walkaround and classic FBD sheets have no answer key, so those answers come from the physics. The
+Physics Classroom blanks use the figures as drawn; a car with only friction is treated as having a net
+force of friction alone.
+
 ### Unit 3: 2nd Law & Acceleration (from the unit summary)
 
 | Station | Topic | What you do |

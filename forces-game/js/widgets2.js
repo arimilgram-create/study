@@ -20,9 +20,11 @@ const EQS = {
   dvt: '&Delta;v = a &middot; t',
   tri: '&Delta;x = &frac12; &middot; base &middot; height (area under v-t)',
   dxavg: '&Delta;x = v<sub>avg</sub> &middot; t',
+  ma: '&Sigma;F = m &middot; a',
+  vf: 'v<sub>f</sub> = v<sub>i</sub> + a &middot; t',
   dxsum: '&Delta;x<sub>T</sub> = &Delta;x<sub>1</sub> + &Delta;x<sub>2</sub> + ...',
 };
-const UNITS = ['N', 'kg', 'N/kg', 'm', 's', 'm/s', 'm/s²', '°'];
+const UNITS = ['N', 'kg', 'N/kg', 'm', 's', 'm/s', 'm/s²', '°', 'mi/hr', 'mi/hr/s'];
 const LOCK_LINES = ['Equation first. Every time.', 'Write it like the test is tomorrow.', 'No equation, no points. Lock in.', 'Equation, plug in, answer with units.', 'This is how you get full credit.', 'Show the work. Get the points.'];
 const lockSVG = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="4" y="10" width="16" height="12" rx="2.5" fill="currentColor"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>';
 function lockBanner(text) {
