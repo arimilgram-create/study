@@ -6,6 +6,19 @@ A study game for the **Forces, Free Body Diagrams and First Law** quiz review an
 **Lock In (show your work):** every calculation makes you (1) pick the equation, (2) plug in the
 values with units, (3) answer with units. You can't skip to the answer, and you build a full-work streak.
 
+### Unit 3: 2nd Law & Acceleration (from the unit summary)
+
+| Station | Topic | What you do |
+|---|---|---|
+| Tail to Tip | Adding vectors | Same way, opposite ways, then a vector lab with Pythagoras and tan θ |
+| Speeding Up or Not? | Acceleration | Sort what's accelerating, direction of a when slowing, a = Δv / t with signs |
+| Velocity-Time Graphs | v-t graphs | Watch a car speed up, read slope = a and area = displacement, draw a v-t graph |
+| Newton's 2nd Law | a = ΣF / m | Net force lab with friction, mass vs acceleration, unbalanced FBD |
+| Multistep Wagon | Multistep problems | One problem in five steps: ΣF, a, Δv, v_avg, Δx |
+| 2nd Law Showdown | All | Timed boss from the whole unit, Lock In calculations |
+
+The unit summary has no answer key, so these answers are worked from the physics. Check them against your teacher's.
+
 ### Test Review: Balanced Forces & Constant Velocity
 
 | Station | Test question | What you do |

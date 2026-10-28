@@ -180,6 +180,7 @@ const Game = {
         h('div', { class: 'legend', html: Object.entries(FORCES).map(([k, f]) => `<span style="color:var(${f.c})">${f.label}</span>`).join('') })),
       h('section', { class: 'lockcard', html: `${lockSVG}<div><h2>Test-day rule: LOCK IN</h2><p>Points get lost for missing work. So here, every calculation makes you <b>write the equation</b>, <b>plug in the values with units</b>, then <b>answer with units</b>. You can't skip to the answer. Do it here and it'll be automatic on the test.</p><p class="mono">Full-work streak: ${s.workStreak}</p></div>` }),
       h('div', { class: 'row keyrow' }, h('button', { class: 'btn primary', onclick: () => this.answerKey() }, 'Answer key with all the work'), h('span', { class: 'hint' }, 'Your teacher\'s key for the test review, typed up. Try each question on paper first, then reveal the work.')),
+      ...section('unit3', 'Unit 3: 2nd Law & Acceleration', 'From the unit summary: vector addition, acceleration, v-t graphs, unbalanced FBDs, Newton\'s 2nd law, and multistep problems.'),
       ...section('unit2', 'Test Review: Balanced Forces & Constant Velocity', 'Your upcoming test. Graphs, velocity, displacement, normal force, and inertia.'),
       ...section('main', 'Quiz Review: Forces, FBDs & First Law', 'Questions 1-9 from the first review sheet.'),
       ...section('extra', 'Extra Practice', 'From the extra review sheet: Mr. C\'s desk, the Mars platypus, and Magnus\'s barbell.'),
