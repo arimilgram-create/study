@@ -83,6 +83,16 @@ v = Δx / t for each part, then the total).
 
 Miss a question twice and the game shows you the right answer, with the worked explanation.
 
+**Loot and perks (v2):** cases now drop an item plus sometimes a bonus bag of chips. An epic or better
+is guaranteed every 15 cases without one (the pity meter). Items you wear give small perks: hats and
+titles add XP from studying, outfits and sidekicks add chips from bonus bags and trade-ins. Shiny
+versions double the perk. Opening shows the case shake, the lid, the reel, and a reveal that gets bigger
+for rarer drops. x5 and x10 open as a card grid.
+
+**Casino (v2):** Plinko has 8, 12 or 16 rows and low, medium or high risk, with the expected return
+shown (96% on every setting). Mines has 1 to 20 mines. Coin Ladder doubles down on each correct call.
+Chips convert to spendable XP at 1 chip = 1 XP (rank still comes from studying).
+
 **Cases, casino and character:** XP you earn (or casino chips) buys cases in the Case Shop (Rest, Velocity,
 Momentum and Newton) holding 67 cosmetics across 5 rarities, with shiny variants. Open 1 or 5 at a time.
 Trade items in for chips at the Casino and play Gravity Plinko, Rocket Crash or Coin Flip (play chips only). Build your character in the Character screen and equip items

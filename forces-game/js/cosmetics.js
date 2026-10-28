@@ -101,9 +101,9 @@ const CONFETTI = {
 const SKINS = ['#fbe0c6', '#f1c27d', '#d9a066', '#b07a4f', '#7d4f32', '#4f3020'];
 const HAIRC = ['#1f1a17', '#5a3825', '#a0522d', '#e6c36a', '#e8590c', '#7048e8', '#1c7ed6', '#e9ecef'];
 const SHIRTS = ['#1f6feb', '#e03131', '#2b8a3e', '#f08c00', '#7048e8', '#e64980', '#18212d'];
-const HAIRS = ['none', 'short', 'curly', 'spiky', 'long', 'bun'];
-const EYES = ['dots', 'happy', 'wide'];
-const MOUTHS = ['smile', 'grin', 'o'];
+const HAIRS = ['none', 'short', 'curly', 'spiky', 'long', 'bun', 'bob', 'mohawk', 'afro'];
+const EYES = ['dots', 'happy', 'wide', 'wink', 'sleepy', 'star'];
+const MOUTHS = ['smile', 'grin', 'o', 'smirk', 'tongue', 'frown'];
 const DEFAULT_AVATAR = { name: 'Player 1', skin: 1, hair: 'short', hairColor: 1, eyes: 'dots', mouth: 'smile', shirt: 0 };
 const INK = '#1b1f27', ST = `stroke="${INK}" stroke-width="3" stroke-linejoin="round"`;
 
@@ -135,20 +135,32 @@ function outfitSVG(id, shirt) {
 }
 function hairTop(style, c) {
   const f = `fill="${c}" ${ST}`;
-  if (style === 'short' || style === 'long' || style === 'bun') return (style === 'bun' ? `<circle cx="100" cy="44" r="15" ${f}/>` : '') + `<path d="M57 90 Q56 46 100 46 Q144 46 143 90 Q136 70 118 66 Q100 76 80 66 Q64 70 57 90 Z" ${f}/>`;
+  const short = `<path d="M57 90 Q56 46 100 46 Q144 46 143 90 Q136 70 118 66 Q100 76 80 66 Q64 70 57 90 Z" ${f}/>`;
+  if (style === 'short' || style === 'long') return short;
+  if (style === 'bun') return `<circle cx="100" cy="44" r="15" ${f}/>` + short;
+  if (style === 'bob') return `<path d="M54 100 Q50 42 100 42 Q150 42 146 100 L146 122 Q134 112 126 120 L122 96 Q100 74 78 96 L74 120 Q66 112 54 122 Z" ${f}/>`;
   if (style === 'spiky') return `<path d="M58 84 L60 56 L74 64 L78 40 L92 56 L100 32 L110 56 L124 40 L126 64 L140 56 L142 84 Q100 64 58 84 Z" ${f}/>`;
+  if (style === 'mohawk') return `<path d="M86 66 L92 12 L100 6 L108 12 L114 66 Q100 58 86 66 Z" ${f}/>`;
   if (style === 'curly') return [200, 222, 245, 270, 295, 318, 340].map(a => { const r = a * Math.PI / 180; return `<circle cx="${(100 + 40 * Math.cos(r)).toFixed(1)}" cy="${(88 + 40 * Math.sin(r)).toFixed(1)}" r="14" ${f}/>`; }).join('');
   return '';
 }
 function faceSVG(eyes, mouth) {
-  let s = '';
-  if (eyes === 'happy') s += `<path d="M77 96 Q84 86 91 96 M109 96 Q116 86 123 96" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
-  else if (eyes === 'wide') s += `<circle cx="84" cy="93" r="9" fill="#fff" ${ST}/><circle cx="116" cy="93" r="9" fill="#fff" ${ST}/><circle cx="86" cy="94" r="4.5" fill="${INK}"/><circle cx="118" cy="94" r="4.5" fill="${INK}"/>`;
-  else s += `<circle cx="84" cy="94" r="5.5" fill="${INK}"/><circle cx="116" cy="94" r="5.5" fill="${INK}"/>`;
-  if (mouth === 'grin') s += `<path d="M84 110 Q100 132 116 110 Z" fill="${INK}"/><path d="M92 120 Q100 126 108 120" stroke="#ff8787" stroke-width="4" fill="none"/>`;
-  else if (mouth === 'o') s += `<ellipse cx="100" cy="116" rx="6" ry="7.5" fill="${INK}"/>`;
-  else s += `<path d="M86 112 Q100 124 114 112" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
-  return s + `<circle cx="72" cy="108" r="6" fill="#ff6b6b" opacity=".3"/><circle cx="128" cy="108" r="6" fill="#ff6b6b" opacity=".3"/>`;
+  let e;
+  if (eyes === 'happy') e = `<path d="M77 96 Q84 86 91 96 M109 96 Q116 86 123 96" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  else if (eyes === 'wide') e = `<circle cx="84" cy="93" r="9" fill="#fff" ${ST}/><circle cx="116" cy="93" r="9" fill="#fff" ${ST}/><circle cx="86" cy="94" r="4.5" fill="${INK}"/><circle cx="118" cy="94" r="4.5" fill="${INK}"/>`;
+  else if (eyes === 'wink') e = `<path d="M77 96 Q84 86 91 96" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="116" cy="94" r="5.5" fill="${INK}"/>`;
+  else if (eyes === 'sleepy') e = `<path d="M76 94 Q84 100 92 94 M108 94 Q116 100 124 94" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  else if (eyes === 'star') e = [84, 116].map(x => `<path transform="translate(${x} 94)" d="M0 -8 L2.4 -2.5 L8 -2.2 L3.6 1.6 L5 7 L0 3.8 L-5 7 L-3.6 1.6 L-8 -2.2 L-2.4 -2.5 Z" fill="#ffd43b" stroke="${INK}" stroke-width="1.5"/>`).join('');
+  else e = `<circle cx="84" cy="94" r="5.5" fill="${INK}"/><circle cx="116" cy="94" r="5.5" fill="${INK}"/>`;
+  let m;
+  if (mouth === 'grin') m = `<path d="M84 110 Q100 132 116 110 Z" fill="${INK}"/><path d="M92 120 Q100 126 108 120" stroke="#ff8787" stroke-width="4" fill="none"/>`;
+  else if (mouth === 'o') m = `<ellipse cx="100" cy="116" rx="6" ry="7.5" fill="${INK}"/>`;
+  else if (mouth === 'smirk') m = `<path d="M88 114 Q104 118 116 108" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  else if (mouth === 'tongue') m = `<path d="M86 112 Q100 124 114 112" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M96 118 Q100 130 104 118 Z" fill="#ff8787" stroke="${INK}" stroke-width="2"/>`;
+  else if (mouth === 'frown') m = `<path d="M88 118 Q100 108 112 118" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  else m = `<path d="M86 112 Q100 124 114 112" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  // the eyes group blinks (CSS in the page); the blush sits under the cheeks
+  return `<g class="eyes">${e}</g>${m}<circle cx="72" cy="108" r="6" fill="#ff6b6b" opacity=".3"/><circle cx="128" cy="108" r="6" fill="#ff6b6b" opacity=".3"/>`;
 }
 function hatSVG(id) {
   switch (id) {
@@ -198,6 +210,7 @@ function avatarSVG(av, eq, crop) {
   const vb = crop === 'head' ? '38 20 124 124' : crop === 'body' ? '20 40 160 180' : '0 0 200 220';
   return `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(av.name)}'s character">` +
     bgSVG(eq.bg) +
+    (av.hair === 'afro' ? `<circle cx="100" cy="74" r="58" fill="${hc}" ${ST}/>` : '') +
     (av.hair === 'long' ? `<path d="M56 90 Q48 160 72 170 L128 170 Q152 160 144 90 Z" fill="${hc}" ${ST}/>` : '') +
     `<rect x="90" y="124" width="20" height="30" fill="${skin}" ${ST}/>` + shine(outfitSVG(eq.outfit, shirt), sh.outfit) +
     `<circle cx="58" cy="98" r="9" fill="${skin}" ${ST}/><circle cx="142" cy="98" r="9" fill="${skin}" ${ST}/>` +

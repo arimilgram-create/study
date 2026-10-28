@@ -46,6 +46,7 @@ function loadState() {
   s.inv = s.inv || {}; s.shinyInv = s.shinyInv || {}; s.equip = s.equip || {}; s.opened = s.opened || 0;
   if (typeof s.chips !== 'number') s.chips = 0;
   s.workStreak = s.workStreak || 0;
+  s.pity = s.pity || 0; s.hist = s.hist || [];
   s.avatar = Object.assign({}, DEFAULT_AVATAR, s.avatar || {});
   return s;
 }
@@ -125,7 +126,7 @@ const Game = {
   mult() { return Math.min(3, 1 + Math.floor(this.streak / 3) * 0.5); },
   award(base, anchor) {
     this.streak++;
-    const gain = Math.round(base * this.mult());
+    const gain = Math.round(base * this.mult() * xpMult());
     this.state.xp += gain; this.state.wallet += gain; saveState(); this.hud();
     xpPop(`+${gain} XP${this.mult() > 1 ? ' x' + this.mult() : ''}`, anchor);
     return gain;
