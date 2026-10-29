@@ -7,6 +7,7 @@ function h(tag, attrs, ...kids) {
     if (k === 'class') el.className = v;
     else if (k === 'html') el.innerHTML = v;
     else if (k === 'style') el.style.cssText = v;
+    else if (k === 'onmount') requestAnimationFrame(() => el.isConnected && v(el));
     else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
     else el.setAttribute(k, v === true ? '' : v);
   }
@@ -118,7 +119,7 @@ const Game = {
     $('#streakBox').classList.toggle('hot', this.streak >= 3);
     $('#soundBtn').textContent = 'Sound: ' + (s.sound ? 'on' : 'off');
     $('#soundBtn').setAttribute('aria-pressed', s.sound);
-    $('#meAvatar').innerHTML = avatarSVG(s.avatar, s.equip, 'head');
+    $('#meAvatar').innerHTML = avatarHTML(s.avatar, s.equip, 'head');
     $('#meName').textContent = s.avatar.name;
     $('#meTitle').textContent = s.equip.title ? ITEM[s.equip.title].name : rankFor(s.xp);
     $('#shopBtn').classList.toggle('glow', !!s.freeCase || s.wallet >= CASES[0].price);
@@ -134,7 +135,7 @@ const Game = {
   miss() { this.streak = 0; this.hud(); },
 
   boot() {
-    this.state = loadState();
+    this.state = loadState(); migrate3d(this.state); saveState();
     $('#homeBtn').onclick = () => this.map();
     $('#meBtn').onclick = () => { SFX.click(); this.character(); };
     $('#shopBtn').onclick = () => { SFX.click(); this.shop(); };
@@ -189,7 +190,7 @@ const Game = {
           h('p', {}, 'Every station is a question from your review sheets, turned into a mini-game. Earn XP, crack open cases, trade your pulls for chips at the casino, and dress up your character.'),
           h('p', { class: 'mono' }, `Stars: ${total} / ${this.levels.length * 3}`)),
         h('div', { class: 'player' },
-          h('button', { class: 'player-av', onclick: () => this.character(), 'aria-label': 'Customize character', html: avatarSVG(s.avatar, s.equip) }),
+          h('button', { class: 'player-av', onclick: () => this.character(), 'aria-label': 'Customize character', onmount: el => liveAvatar(el, s.avatar, s.equip, { h: 230, drag: false }) }),
           h('div', { class: 'player-info' },
             h('b', { class: 'pname' }, s.avatar.name),
             h('span', { class: 'ptitle' }, s.equip.title ? `"${ITEM[s.equip.title].name}"` : rankFor(s.xp)),
@@ -260,7 +261,7 @@ const Game = {
     const say = lost ? 'We\'ll get \'em next time.' : stars === 3 ? 'Flawless!' : stars === 2 ? 'Nice work!' : 'Progress is progress!';
     body.innerHTML = '';
     body.append(h('section', { class: 'step result' },
-      h('div', { class: 'celebrate' }, h('div', { class: 'bubble' }, say), h('div', { class: 'cel-av', html: avatarSVG(s.avatar, s.equip) })),
+      h('div', { class: 'celebrate' }, h('div', { class: 'bubble' }, say), h('div', { class: 'cel-av', onmount: el => { const v = liveAvatar(el, s.avatar, s.equip, { h: 220, auto: 0.8 }); if (v && !lost) v.cheer = 1; } })),
       h('h2', {}, lost ? 'Game over' : 'Station cleared!'),
       h('div', { class: 'bigstars', html: starHTML(stars) }),
       h('p', {}, lines), h('p', { class: 'mono' }, `+${run.xp} XP this run. You have ${s.wallet} XP to spend.`),

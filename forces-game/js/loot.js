@@ -66,7 +66,7 @@ function pushHist(d, c) {
 
 // ---------- perks: items you wear give small passive bonuses ----------
 const PERK_BY_RARITY = { common: 0.02, rare: 0.04, epic: 0.06, legendary: 0.10, mythic: 0.15 };
-const PERK_TYPE = { hat: 'xp', title: 'xp', outfit: 'chips', pet: 'chips' };
+const PERK_TYPE = { hat: 'xp', face: 'xp', title: 'xp', shirt: 'chips', pants: 'chips', pet: 'chips' };
 const PERK_CAP = 0.4;
 function perkOf(it, shiny) { const type = PERK_TYPE[it.slot]; return type ? { type, amount: PERK_BY_RARITY[it.r] * (shiny ? 2 : 1) } : null; }
 function perkTotal(type) {

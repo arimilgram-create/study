@@ -1,4 +1,5 @@
-// Cosmetics: rarities, item catalog, character renderer, item icons.
+// Cosmetics: rarities, the non-3D items (titles, arrow skins, confetti), the 2D character (a fallback when 3D isn't available), and item icons.
+// The 3D items are in items3d.js.
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const RARITY = {
@@ -8,37 +9,9 @@ const RARITY = {
   legendary: { name: 'Legendary', c: '--r-leg', refund: 180 },
   mythic: { name: 'Mythic', c: '--r-myth', refund: 400 },
 };
-const SLOTS = { hat: 'Hats', outfit: 'Outfits', pet: 'Sidekicks', title: 'Titles', arrow: 'Arrow skins', confetti: 'Confetti', bg: 'Backgrounds', charm: 'Charms' };
+const SLOTS = { title: 'Titles', arrow: 'Arrow skins', confetti: 'Confetti' };
 
 const ITEMS = [
-  // hats
-  { id: 'cap', slot: 'hat', r: 'common', name: 'Red Cap', d: 'Blocks the Sun. Does not block gravity.' },
-  { id: 'beanie', slot: 'hat', r: 'common', name: 'Beanie', d: 'Warm, cozy, 0 N of net force.' },
-  { id: 'goggles', slot: 'hat', r: 'common', name: 'Lab Goggles', d: 'Safety first. Physics second.' },
-  { id: 'propeller', slot: 'hat', r: 'rare', name: 'Propeller Cap', d: 'Not enough lift to beat F<sub>g</sub>. Yet.' },
-  { id: 'apple', slot: 'hat', r: 'rare', name: 'Newton\'s Apple', d: 'Balanced on your head: F<sub>N</sub> = |F<sub>g</sub>|.' },
-  { id: 'tophat', slot: 'hat', r: 'rare', name: 'Top Hat', d: 'Very classy. Very at rest.' },
-  { id: 'wizard', slot: 'hat', r: 'epic', name: 'Physics Wizard Hat', d: 'Casts Fnet = F1 + F2 + ...' },
-  { id: 'helmet', slot: 'hat', r: 'epic', name: 'Astronaut Helmet', d: 'For visiting places where g is not -10 N/kg.' },
-  { id: 'wig', slot: 'hat', r: 'legendary', name: 'Sir Isaac\'s Wig', d: 'Worn by the author of the First Law himself.' },
-  { id: 'crown', slot: 'hat', r: 'legendary', name: 'Crown of Inertia', d: 'Heavy crown = lots of inertia.' },
-  { id: 'halo', slot: 'hat', r: 'mythic', name: 'Zero-Net-Force Halo', d: 'Floats forever. Perfectly balanced.' },
-  // outfits
-  { id: 'hoodie', slot: 'outfit', r: 'common', name: 'Hoodie', d: 'Study-session certified.' },
-  { id: 'labcoat', slot: 'outfit', r: 'rare', name: 'Lab Coat', d: 'Comes with a pen for FBD labels.' },
-  { id: 'jersey', slot: 'outfit', r: 'rare', name: 'Crash Test Jersey', d: 'Always wear your seatbelt.' },
-  { id: 'spacesuit', slot: 'outfit', r: 'epic', name: 'Space Suit', d: 'Mars-ready. Weight: 37% of Earth.' },
-  { id: 'tux', slot: 'outfit', r: 'epic', name: 'Tuxedo', d: 'For the Newton\'s Laws formal.' },
-  { id: 'gold', slot: 'outfit', r: 'legendary', name: 'Golden Suit', d: 'Heavier than it looks.' },
-  { id: 'galaxy', slot: 'outfit', r: 'mythic', name: 'Galaxy Suit', d: 'Stitched from deep space, where nothing slows you down.' },
-  // pets
-  { id: 'banana', slot: 'pet', r: 'common', name: 'Banana Buddy', d: '2 kg of bunch. Weighs -20 N.' },
-  { id: 'applepet', slot: 'pet', r: 'common', name: 'Apple Pal', d: 'Fell on Newton once. Still proud of it.' },
-  { id: 'wagon', slot: 'pet', r: 'rare', name: 'Mini Wagon', d: 'Franky\'s. Please return it.' },
-  { id: 'dummy', slot: 'pet', r: 'rare', name: 'Crash Dummy Jr.', d: 'Has inertia. Wears a seatbelt.' },
-  { id: 'platypus', slot: 'pet', r: 'epic', name: 'Platypus', d: '8 kg. Weighs -80 N on Earth, -29.6 N on Mars.' },
-  { id: 'moon', slot: 'pet', r: 'epic', name: 'Pocket Moon', d: 'Keep your gravity on or it flies off in a straight line.' },
-  { id: 'satellite', slot: 'pet', r: 'legendary', name: 'Satellite', d: 'Survived Moon Breakout. Barely.' },
   // titles
   { id: 't_rest', slot: 'title', r: 'common', name: 'Object at Rest', d: 'Stays at rest. Mostly on the couch.' },
   { id: 't_fric', slot: 'title', r: 'common', name: 'Friction Fighter', d: 'Pushes back.' },
@@ -59,33 +32,13 @@ const ITEMS = [
   { id: 'c_banana', slot: 'confetti', r: 'rare', name: 'Banana Confetti', d: 'Peak potassium.' },
   { id: 'c_gold', slot: 'confetti', r: 'epic', name: 'Gold Rush', d: 'Shiny.' },
   { id: 'c_galaxy', slot: 'confetti', r: 'legendary', name: 'Galaxy Burst', d: 'Space-colored confetti.' },
-  // card backgrounds
-  { id: 'bg_chalk', slot: 'bg', r: 'common', name: 'Chalkboard', d: 'Smells like class.' },
-  { id: 'bg_space', slot: 'bg', r: 'rare', name: 'Deep Space', d: 'No friction out here.' },
-  { id: 'bg_sunset', slot: 'bg', r: 'epic', name: 'Sunset', d: 'Golden hour.' },
-  { id: 'bg_aurora', slot: 'bg', r: 'legendary', name: 'Aurora', d: 'Northern lights.' },
   // unit 2: balanced forces & constant velocity
-  { id: 'headband', slot: 'hat', r: 'common', name: 'Racing Headband', d: 'CeeCee wears it. 1.25x faster (not really).', set: 'v' },
-  { id: 'captain', slot: 'hat', r: 'rare', name: 'Captain\'s Hat', d: 'Jayla\'s. Constant 15 m/s across the lake.', set: 'v' },
-  { id: 'catears', slot: 'hat', r: 'epic', name: 'Tom\'s Cat Ears', d: '4.5 kg of attitude. -45 N on Earth.', set: 'v' },
-  { id: 'rockethat', slot: 'hat', r: 'legendary', name: 'Shuttle Hat', d: '7000 m/s. Moon in 54,857 s.', set: 'v' },
-  { id: 'tracksuit', slot: 'outfit', r: 'rare', name: 'Track Suit', d: 'Built for constant velocity.', set: 'v' },
-  { id: 'sailor', slot: 'outfit', r: 'epic', name: 'Boat Captain Uniform', d: 'F<sub>engine</sub> = |F<sub>f</sub>|. Smooth sailing.', set: 'v' },
-  { id: 'checker', slot: 'outfit', r: 'legendary', name: 'Finish Line Suit', d: 'Checkered. Fast. Balanced.', set: 'v' },
-  { id: 'soccer', slot: 'pet', r: 'common', name: 'Soccer Ball', d: 'Rolls to the back of the truck. Inertia.', set: 'v' },
-  { id: 'cartpet', slot: 'pet', r: 'rare', name: 'Shopping Cart', d: '3 m/s on the lot, 0.5 m/s on the grass.', set: 'v' },
-  { id: 'rccar', slot: 'pet', r: 'rare', name: 'RC Car', d: 'Displacement -1 m. Distance 11 m.', set: 'v' },
-  { id: 'tom', slot: 'pet', r: 'epic', name: 'Tom the Cat', d: 'Weighs -2.835 N on Pluto. Still judges you.', set: 'v' },
-  { id: 'boatpet', slot: 'pet', r: 'legendary', name: 'Jayla\'s Boat', d: '600 m in 40 s.', set: 'v' },
-  { id: 'shuttle', slot: 'pet', r: 'mythic', name: 'Space Shuttle', d: 'Enid\'s ride. 384,000,000 m to go.', set: 'v' },
   { id: 't_eq', slot: 'title', r: 'common', name: 'Equation Writer', d: 'Equation first. Every time.', set: 'v' },
   { id: 't_slope', slot: 'title', r: 'common', name: 'Slope Reader', d: 'Steep = fast. Downhill = negative.', set: 'v' },
   { id: 't_lock', slot: 'title', r: 'rare', name: 'Locked In', d: 'Equation, plug in, answer with units.', set: 'v' },
   { id: 't_disp', slot: 'title', r: 'epic', name: 'Displacement Detective', d: 'Knows distance from displacement.', set: 'v' },
   { id: 't_full', slot: 'title', r: 'legendary', name: 'Full Credit', d: 'Shows ALL the work.', set: 'v' },
   { id: 'c_test', slot: 'confetti', r: 'common', name: 'Test Paper Confetti', d: 'Graded A+.', set: 'v' },
-  { id: 'bg_lake', slot: 'bg', r: 'rare', name: 'The Lake', d: '600 m wide.', set: 'v' },
-  { id: 'bg_track', slot: 'bg', r: 'epic', name: 'Race Track', d: '600 m race.', set: 'v' },
 ];
 const ITEM = Object.fromEntries(ITEMS.map(i => [i.id, i]));
 
@@ -217,16 +170,13 @@ function avatarSVG(av, eq, crop) {
     `<circle cx="58" cy="98" r="9" fill="${skin}" ${ST}/><circle cx="142" cy="98" r="9" fill="${skin}" ${ST}/>` +
     `<circle cx="100" cy="92" r="42" fill="${skin}" ${ST}/>` +
     (eq.hat === 'helmet' || eq.hat === 'wig' ? '' : hairTop(av.hair, hc)) + faceSVG(av.eyes, av.mouth) +
-    (artFor(eq.hat, 'head') ? artNest(eq.hat, 52, 4, 96, 96) : shine(hatSVG(eq.hat), sh.hat)) +
-    (artFor(eq.pet, 'pet') ? artNest(eq.pet, 150, 166, 46, 46) : (eq.pet ? shine(`<g transform="translate(160 196)">${petSVG(eq.pet)}</g>`, sh.pet) : '')) +
-    (artFor(eq.outfit, 'body') ? artNest(eq.outfit, 56, 140, 88, 88) : '') +
-    (artFor(eq.charm, 'charm') ? artNest(eq.charm, 4, 170, 36, 36) : '') +
+    shine(hatSVG(eq.hat), sh.hat) +
     (eq.gear && GI[eq.gear] ? shine(giNest(eq.gear, 0, 108, 64, 64), sh.gear) : '') + '</svg>';
 }
 // Icon for an item tile (HTML string).
 function itemIcon(it) {
   if (GI[it.id]) return giIcon(it);
-  if (ART[it.id]) return `<svg viewBox="0 0 72 72" class="vec" role="img" aria-label="${esc(it.name)}">${ART[it.id].svg}</svg>`;
+  if (typeof THUMB_SLOTS !== 'undefined' && THUMB_SLOTS.includes(it.slot)) return thumbHTML(it);
   const av = Game.state.avatar;
   if (it.slot === 'hat') return avatarSVG(av, { hat: it.id }, 'head');
   if (it.slot === 'outfit') return avatarSVG(av, { outfit: it.id }, 'body');

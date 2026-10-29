@@ -14,6 +14,7 @@ function tile(it, shiny) {
 function addItem(it, shiny) {
   const s = Game.state, dup = (s.inv[it.id] || 0) > 0;
   s.inv[it.id] = (s.inv[it.id] || 0) + 1; if (shiny) s.shinyInv[it.id] = (s.shinyInv[it.id] || 0) + 1;
+  s.recentIds = [it.id, ...(s.recentIds || []).filter(x => x !== it.id)].slice(0, 30);
   return dup;
 }
 // Sells one copy for chips. Returns the chips gained (0 if there was nothing to sell).
