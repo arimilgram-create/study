@@ -94,7 +94,7 @@ Game.character = function (cat = 'clothing', sub) {
         n ? h('div', { class: 'row' },
           h('button', { class: 'btn small primary', onclick: () => worn ? unequip(it.slot) : wear(it, false) }, worn ? 'Take off' : 'Wear'),
           ns ? h('button', { class: 'btn small', onclick: () => wear(it, true) }, 'Wear shiny ✦') : null,
-          h('button', { class: 'btn small', onclick: e => { const g = tradeIn(it.id, ns && n === ns); if (g) { xpPop(`+${g} chips`, e.currentTarget, 'chip'); SFX.good(); refreshStage(); drawGrid(); showDetail(it); } } }, `Sell one (+${chipValue(it, ns && n === ns)})`)) : h('p', { class: 'hint' }, 'Locked. Win it from a case.')));
+          it.noTrade ? null : h('button', { class: 'btn small', onclick: e => { const g = tradeIn(it.id, ns && n === ns); if (g) { xpPop(`+${g} chips`, e.currentTarget, 'chip'); SFX.good(); refreshStage(); drawGrid(); showDetail(it); } } }, `Sell one (+${chipValue(it, ns && n === ns)})`)) : h('p', { class: 'hint' }, 'Locked. Win it from a case.')));
   }
 
   // ---------- body editor ----------

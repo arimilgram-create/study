@@ -20,7 +20,7 @@ function addItem(it, shiny) {
 // Sells one copy for chips. Returns the chips gained (0 if there was nothing to sell).
 function tradeIn(id, shiny) {
   const s = Game.state, it = ITEM[id], n = s.inv[id] || 0, ns = s.shinyInv[id] || 0;
-  if (shiny ? ns < 1 : n - ns < 1) return 0;
+  if (it.noTrade || (shiny ? ns < 1 : n - ns < 1)) return 0;
   s.inv[id] = n - 1; if (shiny) s.shinyInv[id] = ns - 1;
   if (!s.inv[id] && s.equip[it.slot] === id) { delete s.equip[it.slot]; if (s.equip.shiny) s.equip.shiny[it.slot] = false; }
   if (shiny && !s.shinyInv[id] && s.equip.shiny) s.equip.shiny[it.slot] = false;

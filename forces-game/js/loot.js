@@ -37,7 +37,7 @@ function rollRarity(odds) {
   return keys[keys.length - 1];
 }
 const onlyHigh = odds => Object.fromEntries(Object.entries(odds).filter(([k]) => HIGH.includes(k)));
-const poolOf = c => ITEMS.filter(i => !c.pool || c.pool(i));
+const poolOf = c => ITEMS.filter(i => !i.noCase && (!c.pool || c.pool(i)));
 
 // One case: an item, and sometimes a bonus bag of chips. The pity guarantee forces an epic or better.
 function rollCase(c) {
@@ -45,7 +45,7 @@ function rollCase(c) {
   const hi = onlyHigh(c.odds);
   const r = forced && Object.keys(hi).length ? rollRarity(hi) : rollRarity(c.odds);
   const pool = poolOf(c).filter(i => i.r === r);
-  const it = pick(pool.length ? pool : ITEMS.filter(i => i.r === r));
+  const it = pick(pool.length ? pool : ITEMS.filter(i => i.r === r && !i.noCase));
   const shiny = Math.random() < c.shiny;
   const drops = [{ kind: 'item', it, shiny }];
   if (Math.random() < c.bonus) drops.push({ kind: 'chips', amount: Math.max(5, Math.round(c.chips * (0.4 + Math.random() * 0.6) * chipBonusMult())) });

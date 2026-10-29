@@ -142,6 +142,7 @@ const Game = {
     $('#meBtn').onclick = () => { SFX.click(); this.character(); };
     $('#shopBtn').onclick = () => { SFX.click(); this.shop(); };
     $('#casinoBtn').onclick = () => { SFX.click(); this.casino(); };
+    $('#hangBtn').onclick = () => { SFX.click(); this.hangout(); };
     $('#soundBtn').onclick = () => { this.state.sound = !this.state.sound; saveState(); this.hud(); SFX.click(); };
     this.hud(); this.map();
     if (typeof Juice !== 'undefined') Juice.boot();
@@ -201,6 +202,7 @@ const Game = {
             h('span', { class: 'mono' }, `XP to spend: ${s.wallet} | Chips: ${s.chips}`),
             h('span', { class: 'mono' }, `Collection: ${owned} / ${ITEMS.length}`),
             h('div', { class: 'row' },
+              h('button', { class: 'btn play-btn', onclick: () => this.hangout() }, '▶ Play 3D Hangout'),
               h('button', { class: 'btn small', onclick: () => this.character() }, 'Customize'),
               h('button', { class: 'btn small primary', onclick: () => this.shop() }, s.freeCase ? 'Free case!' : 'Open cases'),
               h('button', { class: 'btn small', onclick: () => this.casino() }, 'Casino'))))),
