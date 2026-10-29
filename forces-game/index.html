@@ -599,6 +599,21 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:.01em}
 .player-av{background:linear-gradient(180deg,var(--ae1),var(--ae2));min-height:150px}
 .mini-av .portrait3d{transform:scale(1.15)}
 @media (max-width:820px){ .ae{grid-template-columns:minmax(0,1fr)} .ae-stage{position:static} .ae-grid{grid-template-columns:repeat(auto-fill,minmax(94px,1fr))} }
+/* 3D case opening */
+.cs-wrap{position:relative;width:100%;border:3px solid #15171c;border-radius:var(--r);overflow:hidden;box-shadow:0 6px 0 #15171c;background:#0b0e14}
+.cs-view{position:relative;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--gc) 60%,transparent),transparent 62%),linear-gradient(#1c2333,#0b0e14);transition:background .35s}
+.cs-view .v3d{display:block;cursor:pointer}
+.cs-hint{position:absolute;left:50%;top:14px;transform:translateX(-50%);font:700 clamp(1.3rem,4vw,1.8rem) var(--display);color:#fff;text-shadow:var(--ol),0 4px 0 #15171c;pointer-events:none;white-space:nowrap;animation:hintbob 1s ease-in-out infinite}
+.cs-dots{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;gap:10px;pointer-events:none}
+.cs-dots i{width:18px;height:18px;border-radius:50%;border:3px solid #15171c;background:rgba(255,255,255,.35)}
+.cs-dots i.on{background:var(--gold1);box-shadow:0 0 12px var(--gold1)}
+.cs-name{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);text-align:center;display:flex;flex-direction:column;align-items:center;pointer-events:none;animation:pop .45s ease-out;width:max-content;max-width:94%}
+.cs-name span{font:700 .95rem var(--display);letter-spacing:.14em;color:var(--rc);text-shadow:var(--ol-sm)}
+.cs-name b{font:700 clamp(1.4rem,4.4vw,2.3rem) var(--display);color:#fff;text-shadow:var(--ol),0 4px 0 #15171c}
+.case3d{width:150px;height:auto;display:block}
+.flip-back .case3d{width:82%}
+.case-art img.case3d{filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))}
+@keyframes hintbob{50%{transform:translate(-50%,-6px)}}
 @media (max-width:720px){ .stat{padding:2px 9px 2px 3px} .hud-stats{gap:8px} .hud-stats div.stat:nth-of-type(3){display:none} .map-tab{padding:8px 12px;font-size:1rem} .step{padding:14px} }
 .hud .stat b{white-space:nowrap}
 @media (max-width:720px){ .hud{position:static} .hero,.fbd,.sim,.char{grid-template-columns:minmax(0,1fr)} .char-card{position:static} .drop{grid-template-columns:minmax(0,1fr);justify-items:center} .player{grid-template-columns:110px minmax(0,1fr)} .me-txt{display:none} .me-btn{padding:2px} .lockcard{flex-direction:column} .trade-row{grid-template-columns:48px minmax(0,1fr)} .trade-row .row{grid-column:1/-1} body{font-size:16px} .step{padding:14px} }
@@ -622,7 +637,7 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:.01em}
   <filter id="fxShiny" x="-30%" y="-30%" width="160%" height="160%"><feMorphology in="SourceAlpha" operator="dilate" radius="2" result="d"/><feFlood flood-color="#ffd43b"/><feComposite in2="d" operator="in" result="o"/><feGaussianBlur in="o" stdDeviation="2.5" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 </defs></svg>
 <main id="app" class="wrap"></main>
-<footer class="credit">Vector art: <a href="https://openmoji.org" target="_blank" rel="noopener">OpenMoji</a>, licensed CC BY-SA 4.0. Gear and back items: <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a> by Lorc, Delapouite and contributors, licensed CC BY 3.0.</footer>
+<footer class="credit">3D engine: <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> (MIT). Gear items: <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a> by Lorc, Delapouite and contributors, licensed CC BY 3.0.</footer>
 <canvas id="confetti" aria-hidden="true"></canvas>
 
 <script src="js/core.js"></script>
@@ -648,6 +663,7 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:.01em}
 <script src="js/guide.js"></script>
 <script src="js/loot.js"></script>
 <script src="js/shop.js"></script>
+<script src="js/cases3d.js"></script>
 <script src="js/casino.js"></script>
 <script src="js/character.js"></script>
 <script>Game.boot();</script>
