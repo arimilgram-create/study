@@ -59,21 +59,27 @@ const KEY = [
     { id: '13d', q: 'Displacement from 7-10 s.', w: ['v = &Delta;x / t', '-1 m/s = &Delta;x / 3 s', '-3 m = &Delta;x', 'or: &Delta;x = x<sub>f</sub> - x<sub>i</sub> = 6 m - 9 m = -3 m'] },
   ] },
 ];
-const keyOf = station => (KEY.find(k => k.station === station) || {}).n;
-const partLabel = id => (id.match(/^(?:rc-)?\d*([a-z])/) || [])[1] || '';
-const KEYPART = Object.fromEntries(KEY.flatMap(k => k.parts.map(p => [p.id, p])));
+// Every teacher key in the game. Other files add their own sets (guide.js adds the 2nd Law quiz review).
+const KEYSETS = { cv: { title: 'Balanced Forces & Constant Velocity', short: 'constant velocity test review', tag: 'Test Q', list: KEY } };
+const keyOf = station => {
+  for (const [set, ks] of Object.entries(KEYSETS)) { const k = ks.list.find(k => k.station === station); if (k) return { set, n: k.n }; }
+  return null;
+};
+const partLabel = id => (id.match(/^(?:rc-|g-)?\d*([a-z])/) || [])[1] || '';
+const keyPart = id => Object.values(KEYSETS).flatMap(ks => ks.list.flatMap(k => k.parts)).find(p => p.id === id);
 // The answer key's work as a block for a station explanation.
-const keyFor = (...ids) => `<div class="keywork"><span class="kw-label">Answer key work</span>${ids.flatMap(id => KEYPART[id].w).map(l => `<span class="kline">${l}</span>`).join('')}</div>`;
+const keyFor = (...ids) => `<div class="keywork"><span class="kw-label">Answer key work</span>${ids.flatMap(id => keyPart(id).w).map(l => `<span class="kline">${l}</span>`).join('')}</div>`;
 
-Game.answerKey = function (focus) {
+Game.answerKey = function (focus, setId = 'cv') {
+  const ks = KEYSETS[setId];
   const app = $('#app'); app.innerHTML = '';
   let all = false; const toggles = [];
   const showAll = h('button', { class: 'btn small', onclick: () => { all = !all; toggles.forEach(t => t(all)); showAll.textContent = all ? 'Hide all work' : 'Show all work'; } }, 'Show all work');
-  app.append(h('div', { class: 'lvl-head' }, h('button', { class: 'btn small', onclick: () => this.map() }, '< Map'), h('h2', {}, 'Answer Key: Balanced Forces & Constant Velocity'), showAll),
+  app.append(h('div', { class: 'lvl-head' }, h('button', { class: 'btn small', onclick: () => this.map() }, '< Map'), h('h2', {}, 'Answer Key: ' + ks.title), showAll),
     h('div', { class: 'lockin', html: `${lockSVG}<span><b>LOCK IN.</b> Try each one on paper first: equation, plug in, answer with units. Then tap <b>Show work</b> and compare line by line with your teacher's key.</span>` }));
   const list = h('div', { class: 'key-list' }); app.append(list);
-  KEY.forEach(k => {
-    const card = h('section', { class: 'key-card', id: 'key-' + k.n.replace(/\W+/g, '') }, h('div', { class: 'key-head' }, h('span', { class: 'tag' }, 'Test Q' + k.n), h('h3', { html: k.title }),
+  ks.list.forEach(k => {
+    const card = h('section', { class: 'key-card', id: 'key-' + k.n.replace(/\W+/g, '') }, h('div', { class: 'key-head' }, h('span', { class: 'tag' }, ks.tag + k.n), h('h3', { html: k.title }),
       h('button', { class: 'btn small', onclick: () => this.play(this.levels.findIndex(l => l.id === k.station)) }, 'Practice it >')));
     k.parts.forEach(p => {
       const work = h('div', { class: 'key-work' }, ...p.w.map(l => h('div', { class: 'kline', html: l })), p.g ? h('div', { class: 'key-graphs', html: p.g() }) : null);

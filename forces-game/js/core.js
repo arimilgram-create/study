@@ -157,10 +157,35 @@ const Game = {
       h('div', { class: 'sec-head' }, h('h2', {}, title), h('p', {}, sub)),
       h('div', { class: 'grid' }, this.levels.map((l, i) => (l.section || 'main') === key ? station(l, i) : null)),
     ];
+    // Map tabs: the current study guide first, the extra practice for this unit, then the older units.
+    const tabs = [
+      { id: 'quiz', label: 'Quiz Review', badge: 'NEW', sections: [
+        ['quiz2', 'Quiz Review: Acceleration & Newton\'s 2nd Law', 'Your study guide, question by question, with your teacher\'s worked answers. Start here.']] },
+      { id: 'extra', label: 'Extra', sections: [
+        ['accel', 'Acceleration Packet', 'Acceleration, v-t graphs, direction, word problems, Newton\'s 2nd law calculations, free body diagrams, and the fan cart lab. Built from the unit summary and your packets.'],
+        ['unit3', 'Unit 3: 2nd Law & Acceleration', 'From the unit summary: vector addition, acceleration, v-t graphs, unbalanced FBDs, Newton\'s 2nd law, and multistep problems.'],
+        ['summary', 'Summary Extras', 'The unit summary items the other stations didn\'t cover: the vocab terms, parallel and perpendicular vectors, the change formula ΔQ, the Hot Wheels track, and a cart on a hill.']] },
+      { id: 'old', label: 'Old Units', sections: [
+        ['unit2', 'Test Review: Balanced Forces & Constant Velocity', 'Graphs, velocity, displacement, normal force, and inertia.'],
+        ['main', 'Quiz Review: Forces, FBDs & First Law', 'Questions 1-9 from the first review sheet.'],
+        ['extra', 'Extra Practice', 'From the extra review sheet: Mr. C\'s desk, the Mars platypus, and Magnus\'s barbell.'],
+        ['boss', 'Final Boss', 'Random questions from the old units.']] },
+    ];
+    const tabStars = t => { const ls = this.levels.filter(l => t.sections.some(([k]) => (l.section || 'main') === k)); return `${ls.reduce((n, l) => n + (s.stars[l.id] || 0), 0)}/${ls.length * 3}`; };
+    if (!this.mapTab) { try { this.mapTab = localStorage.getItem('inertia-quest-tab'); } catch (e) {} }
+    const pane = h('div', { class: 'map-pane' }), tabBtns = {};
+    const showTab = id => {
+      const t = tabs.find(x => x.id === id) || tabs[0]; this.mapTab = t.id;
+      try { localStorage.setItem('inertia-quest-tab', t.id); } catch (e) {}
+      Object.entries(tabBtns).forEach(([k, b]) => { b.classList.toggle('on', k === t.id); b.setAttribute('aria-selected', k === t.id); });
+      pane.innerHTML = ''; pane.append(...t.sections.flatMap(([k, title, sub]) => section(k, title, sub)));
+    };
+    const tabBar = h('div', { class: 'map-tabs', role: 'tablist', 'aria-label': 'Sections' }, tabs.map(t => tabBtns[t.id] = h('button', { class: 'map-tab', role: 'tab', onclick: () => { SFX.click(); showTab(t.id); } },
+      h('span', { class: 'mt-label' }, t.label), t.badge ? h('span', { class: 'mt-badge' }, t.badge) : null, h('span', { class: 'mt-stars', html: `&#9733; ${tabStars(t)}` }))));
     app.append(
       h('section', { class: 'hero' },
         h('div', {},
-          h('h1', { html: 'Forces, Motion &amp; the <em>First Law</em>' }),
+          h('h1', { html: 'Forces, Motion &amp; <em>Newton\'s Laws</em>' }),
           h('p', {}, 'Every station is a question from your review sheets, turned into a mini-game. Earn XP, crack open cases, trade your pulls for chips at the casino, and dress up your character.'),
           h('p', { class: 'mono' }, `Stars: ${total} / ${this.levels.length * 3}`)),
         h('div', { class: 'player' },
@@ -176,23 +201,19 @@ const Game = {
               h('button', { class: 'btn small primary', onclick: () => this.shop() }, s.freeCase ? 'Free case!' : 'Open cases'),
               h('button', { class: 'btn small', onclick: () => this.casino() }, 'Casino'))))),
       h('aside', { class: 'cheat' },
-        h('div', { class: 'eq', html: `<b>Cheat sheet</b> &nbsp; &Sigma;F = F<sub>1</sub> + F<sub>2</sub> + ... &nbsp;&nbsp; F<sub>g</sub> = m &middot; g &nbsp;&nbsp; g = -10 N/kg &nbsp;&nbsp; s<sub>avg</sub> = d / t &nbsp;&nbsp; v<sub>avg</sub> = &Delta;x / t &nbsp;&nbsp; &Delta;x = x<sub>f</sub> - x<sub>i</sub>` }),
+        h('div', { class: 'eq', html: `<b>Cheat sheet</b> &nbsp; a = F<sub>net</sub> / m &nbsp;&nbsp; a = &Delta;v / t &nbsp;&nbsp; F<sub>net</sub> = F<sub>1</sub> + F<sub>2</sub> + ... &nbsp;&nbsp; F<sub>g</sub> = m &middot; g &nbsp;&nbsp; g = -10 N/kg &nbsp;&nbsp; R<sup>2</sup> = x<sup>2</sup> + y<sup>2</sup> &nbsp;&nbsp; v<sub>avg</sub> = &Delta;x / t &nbsp;&nbsp; &Delta;x = x<sub>f</sub> - x<sub>i</sub>` }),
         h('small', {}, 'Up and right are +. Down and left are -. Show: equation, values plugged in, answer with units.'),
         h('div', { class: 'legend', html: Object.entries(FORCES).map(([k, f]) => `<span style="color:var(${f.c})">${f.label}</span>`).join('') })),
       h('section', { class: 'lockcard', html: `${lockSVG}<div><h2>Test-day rule: LOCK IN</h2><p>Points get lost for missing work. So here, every calculation makes you <b>write the equation</b>, <b>plug in the values with units</b>, then <b>answer with units</b>. You can't skip to the answer. Do it here and it'll be automatic on the test.</p><p class="mono">Full-work streak: ${s.workStreak}</p></div>` }),
-      h('div', { class: 'row keyrow' }, h('button', { class: 'btn primary', onclick: () => this.answerKey() }, 'Answer key with all the work'), h('span', { class: 'hint' }, 'Your teacher\'s key for the test review, typed up. Try each question on paper first, then reveal the work.')),
-      ...section('accel', 'Acceleration Packet', 'Acceleration, v-t graphs, direction, word problems, Newton\'s 2nd law calculations, free body diagrams, and the fan cart lab. Built from the unit summary and your packets.'),
-      ...section('unit3', 'Unit 3: 2nd Law & Acceleration', 'From the unit summary: vector addition, acceleration, v-t graphs, unbalanced FBDs, Newton\'s 2nd law, and multistep problems.'),
-      ...section('summary', 'Summary Extras', 'The unit summary items the other stations didn\'t cover: the vocab terms, parallel and perpendicular vectors, the change formula ΔQ, the Hot Wheels track, and a cart on a hill.'),
-      ...section('unit2', 'Test Review: Balanced Forces & Constant Velocity', 'Your upcoming test. Graphs, velocity, displacement, normal force, and inertia.'),
-      ...section('main', 'Quiz Review: Forces, FBDs & First Law', 'Questions 1-9 from the first review sheet.'),
-      ...section('extra', 'Extra Practice', 'From the extra review sheet: Mr. C\'s desk, the Mars platypus, and Magnus\'s barbell.'),
-      ...section('boss', 'Final Boss', 'Random questions from everything above.'));
+      h('div', { class: 'row keyrow' }, ...Object.entries(KEYSETS).reverse().map(([id, ks], i) => h('button', { class: 'btn' + (i === 0 ? ' primary' : ''), onclick: () => this.answerKey(null, id) }, 'Answer key: ' + ks.short)),
+        h('span', { class: 'hint' }, 'Your teacher\'s keys, typed up with all the work. Try each question on paper first, then reveal the work.')),
+      tabBar, pane);
+    showTab(this.mapTab);
     scrollTo(0, 0);
   },
 
   play(index) {
-    const def = this.levels[index];
+    const def = this.levels[index], key = !def.boss && keyOf(def.id);
     const app = $('#app'); app.innerHTML = '';
     const run = { mistakes: 0, xp: 0, hearts: 3 };
     const dots = h('div', { class: 'dots' }, def.steps.map(() => h('i')));
@@ -200,7 +221,7 @@ const Game = {
     app.append(h('div', { class: 'lvl-head' },
       h('button', { class: 'btn small', onclick: () => this.map() }, '< Map'),
       h('span', { class: 'tag' }, def.tag), h('h2', {}, def.title), dots,
-      def.section === 'unit2' && !def.boss ? h('button', { class: 'btn small', onclick: () => this.answerKey(keyOf(def.id)) }, 'Answer key') : null), body);
+      key ? h('button', { class: 'btn small', onclick: () => this.answerKey(key.n, key.set) }, 'Answer key') : null), body);
     scrollTo(0, 0);
 
     const go = (i) => {
@@ -228,7 +249,7 @@ const Game = {
   },
 
   finish(index, run, body) {
-    const def = this.levels[index], s = this.state;
+    const def = this.levels[index], s = this.state, key = !def.boss && keyOf(def.id);
     const stars = def.boss ? run.hearts : run.mistakes === 0 ? 3 : run.mistakes <= 2 ? 2 : 1;
     if (stars > (s.stars[def.id] || 0)) s.stars[def.id] = stars;
     saveState(); SFX.win(); confetti();
@@ -246,7 +267,7 @@ const Game = {
       h('div', { class: 'row', style: 'justify-content:center' },
         h('button', { class: 'btn', onclick: () => this.play(index) }, 'Replay'),
         index + 1 < this.levels.length ? h('button', { class: 'btn primary', onclick: () => this.play(index + 1) }, 'Next station >') : null,
-        def.section === 'unit2' && !def.boss ? h('button', { class: 'btn', onclick: () => this.answerKey(keyOf(def.id)) }, 'Answer key') : null,
+        key ? h('button', { class: 'btn', onclick: () => this.answerKey(key.n, key.set) }, 'Answer key') : null,
         h('button', { class: 'btn', onclick: () => this.shop() }, 'Open cases'),
         h('button', { class: 'btn', onclick: () => this.casino() }, 'Casino'),
         h('button', { class: 'btn', onclick: () => this.map() }, 'Map'))));
