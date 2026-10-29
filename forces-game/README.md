@@ -1,10 +1,30 @@
 # Inertia Quest
 
-A study game for the **Forces, Free Body Diagrams and First Law** quiz review and the
-**Balanced Forces and Constant Velocity** test review. Each station is a review question turned into a mini-game.
+A study game for the **Acceleration and Newton's 2nd Law** quiz review, plus the earlier units. Each station
+is a review question turned into a mini-game. The look is styled after Roblox game menus: outlined bubble
+titles, glossy 3D buttons, a dark top bar with currency pills, and a baseplate-stud background.
 
 **Lock In (show your work):** every calculation makes you (1) pick the equation, (2) plug in the
 values with units, (3) answer with units. You can't skip to the answer, and you build a full-work streak.
+
+The map has three tabs: **Quiz Review** (the current study guide), **Extra** (the acceleration packet,
+Unit 3, and Summary Extras), and **Old Units**.
+
+### Quiz Review: Acceleration & Newton's 2nd Law (the study guide)
+
+Built from the teacher's filled-in study guide. Every calculation's answer matches the key, and the key's
+work is on its own Answer Key page.
+
+| Station | Question | What you do |
+|---|---|---|
+| Superman vs the Runaway Train | Q1 | Direction of a, a = Δv / t, draw the v-t graph, the FBD, F_net, Superman's push, half the mass |
+| The Stuntman Cannon | Q2 | FBD, signs of v / F_net / a, F_net, mass from weight, a, final velocity, pick the graph |
+| The Truck Skids to a Stop | Q3 | FBD, the net force, a, then work back to the starting velocity |
+| Melinda's Wheelbarrow | Q4 | FBD, a, F_net, then the friction |
+| The Crane and the Iron | Q5 | Constant velocity force, then the slowing-down chain: F_net, m, a, time; pick the graph |
+| Paulina's Walk | Q6 | Pick the tail-to-tip vector diagram, then Pythagoras |
+| Five Forces, One Object | Q7 | F_net,x, F_net,y, the resultant, and its direction |
+| Quiz Review Showdown | All | Timed boss with random versions of these questions |
 
 ### Acceleration Packet
 
@@ -111,6 +131,12 @@ Chips convert to spendable XP at 1 chip = 1 XP (rank still comes from studying).
 CC BY-SA 4.0. They include 40 outfits, 7 hats, 126 animal sidekicks, and 351 charms. Hats, outfits, and
 sidekicks appear on your character. Every item shows its vector in the locker, shop, and drop cards.
 The art is generated from the OpenMoji color SVG set, so don't edit it by hand.
+
+**Gear and back items (v4):** `js/art2.js` holds 196 vectors from [game-icons.net](https://game-icons.net)
+by Lorc, Delapouite and contributors, licensed CC BY 3.0: 178 **Gear** items held in the character's
+hand (swords, wands, tridents, shields, tools, instruments) and 18 **Back** items (wings, capes, jetpacks).
+They are drawn in their rarity color with a thick outline, drop from every case, and are cosmetic only
+(no perk). The file is generated, so don't edit it by hand.
 
 **Cheaper cases (v3):** Pocket Case (40 XP or 30 chips) and Lab Case (90 XP or 50 chips). Both still
 return less than they cost, even with the perk bonus maxed.

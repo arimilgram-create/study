@@ -210,6 +210,7 @@ function avatarSVG(av, eq, crop) {
   const vb = crop === 'head' ? '38 20 124 124' : crop === 'body' ? '20 40 160 180' : '0 0 200 220';
   return `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(av.name)}'s character">` +
     bgSVG(eq.bg) +
+    (eq.back && GI[eq.back] ? shine(giNest(eq.back, 4, 74, 192, 146), sh.back) : '') +
     (av.hair === 'afro' ? `<circle cx="100" cy="74" r="58" fill="${hc}" ${ST}/>` : '') +
     (av.hair === 'long' ? `<path d="M56 90 Q48 160 72 170 L128 170 Q152 160 144 90 Z" fill="${hc}" ${ST}/>` : '') +
     `<rect x="90" y="124" width="20" height="30" fill="${skin}" ${ST}/>` + shine(outfitSVG(eq.outfit, shirt), sh.outfit) +
@@ -219,10 +220,12 @@ function avatarSVG(av, eq, crop) {
     (artFor(eq.hat, 'head') ? artNest(eq.hat, 52, 4, 96, 96) : shine(hatSVG(eq.hat), sh.hat)) +
     (artFor(eq.pet, 'pet') ? artNest(eq.pet, 150, 166, 46, 46) : (eq.pet ? shine(`<g transform="translate(160 196)">${petSVG(eq.pet)}</g>`, sh.pet) : '')) +
     (artFor(eq.outfit, 'body') ? artNest(eq.outfit, 56, 140, 88, 88) : '') +
-    (artFor(eq.charm, 'charm') ? artNest(eq.charm, 4, 170, 36, 36) : '') + '</svg>';
+    (artFor(eq.charm, 'charm') ? artNest(eq.charm, 4, 170, 36, 36) : '') +
+    (eq.gear && GI[eq.gear] ? shine(giNest(eq.gear, 0, 108, 64, 64), sh.gear) : '') + '</svg>';
 }
 // Icon for an item tile (HTML string).
 function itemIcon(it) {
+  if (GI[it.id]) return giIcon(it);
   if (ART[it.id]) return `<svg viewBox="0 0 72 72" class="vec" role="img" aria-label="${esc(it.name)}">${ART[it.id].svg}</svg>`;
   const av = Game.state.avatar;
   if (it.slot === 'hat') return avatarSVG(av, { hat: it.id }, 'head');
