@@ -614,6 +614,29 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:.01em}
 .flip-back .case3d{width:82%}
 .case-art img.case3d{filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))}
 @keyframes hintbob{50%{transform:translate(-50%,-6px)}}
+/* juice */
+.coin-fly{position:fixed;left:0;top:0;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;z-index:70;pointer-events:none;background:radial-gradient(circle at 35% 30%,#fff7c2,var(--gold1) 40%,var(--gold2));border:2px solid #15171c;box-shadow:0 0 10px var(--gold1)}
+.coin-fly::after{content:'\2605';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 12px var(--display);color:#fff;text-shadow:var(--ol-sm)}
+.bump{animation:bump .35s ease-out}
+@keyframes bump{40%{transform:scale(1.22)}100%{transform:scale(1)}}
+.toast{position:fixed;left:50%;top:86px;transform:translateX(-50%);z-index:65;font:700 clamp(1.6rem,5vw,2.6rem) var(--display);color:#fff;text-shadow:var(--ol),0 5px 0 #15171c;pointer-events:none;white-space:nowrap;animation:toastIn 1.7s ease-out forwards}
+.toast.hot{color:var(--gold1)}
+.toast.bad{color:#ffd6db;font-size:1.3rem}
+@keyframes toastIn{0%{transform:translate(-50%,20px) scale(.5);opacity:0}15%{transform:translate(-50%,0) scale(1.15);opacity:1}25%{transform:translate(-50%,0) scale(1)}80%{opacity:1}100%{transform:translate(-50%,-14px);opacity:0}}
+.ring{animation:ringpulse .55s ease-out}
+@keyframes ringpulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--green2) 75%,transparent),0 4px 0 #15171c}100%{box-shadow:0 0 0 20px transparent,0 4px 0 #15171c}}
+.bigstars .st{display:inline-block;animation:starpop .5s cubic-bezier(.2,1.6,.4,1) both;color:var(--gold1);text-shadow:var(--ol)}
+.bigstars .st.off{color:var(--line);text-shadow:none}
+@keyframes starpop{0%{transform:scale(0) rotate(-45deg);opacity:0}100%{transform:none;opacity:1}}
+.modal-bg{position:fixed;inset:0;z-index:80;background:rgba(10,14,22,.55);display:flex;align-items:center;justify-content:center;padding:16px;animation:fadein .2s}
+.modal{max-width:440px;width:100%;background:var(--card);border:4px solid #15171c;border-radius:22px;box-shadow:0 8px 0 #15171c;padding:22px;text-align:center;display:flex;flex-direction:column;gap:10px;animation:modalpop .4s cubic-bezier(.2,1.5,.4,1)}
+.modal h2{font-size:2rem;color:#fff;text-shadow:var(--ol),0 4px 0 #15171c}
+.modal p{margin:0}
+.rankup{background:linear-gradient(var(--gold1),var(--gold2));color:#1b1d22}
+.ru-badge{width:110px;height:110px;margin:0 auto;border-radius:50%;border:4px solid #15171c;background:#fff;overflow:hidden}
+.ru-name{font:700 1.7rem var(--display)}
+@keyframes modalpop{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}
+@keyframes fadein{from{opacity:0}}
 @media (max-width:720px){ .stat{padding:2px 9px 2px 3px} .hud-stats{gap:8px} .hud-stats div.stat:nth-of-type(3){display:none} .map-tab{padding:8px 12px;font-size:1rem} .step{padding:14px} }
 .hud .stat b{white-space:nowrap}
 @media (max-width:720px){ .hud{position:static} .hero,.fbd,.sim,.char{grid-template-columns:minmax(0,1fr)} .char-card{position:static} .drop{grid-template-columns:minmax(0,1fr);justify-items:center} .player{grid-template-columns:110px minmax(0,1fr)} .me-txt{display:none} .me-btn{padding:2px} .lockcard{flex-direction:column} .trade-row{grid-template-columns:48px minmax(0,1fr)} .trade-row .row{grid-column:1/-1} body{font-size:16px} .step{padding:14px} }
@@ -666,4 +689,5 @@ h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:.01em}
 <script src="js/cases3d.js"></script>
 <script src="js/casino.js"></script>
 <script src="js/character.js"></script>
+<script src="js/juice.js"></script>
 <script>Game.boot();</script>

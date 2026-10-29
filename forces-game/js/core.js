@@ -128,11 +128,13 @@ const Game = {
   award(base, anchor) {
     this.streak++;
     const gain = Math.round(base * this.mult() * xpMult());
+    const before = rankFor(this.state.xp);
     this.state.xp += gain; this.state.wallet += gain; saveState(); this.hud();
     xpPop(`+${gain} XP${this.mult() > 1 ? ' x' + this.mult() : ''}`, anchor);
+    if (typeof Juice !== 'undefined') { Juice.gain(gain, anchor, this.streak); if (rankFor(this.state.xp) !== before) Juice.rankUp(rankFor(this.state.xp)); }
     return gain;
   },
-  miss() { this.streak = 0; this.hud(); },
+  miss() { const was = this.streak; this.streak = 0; this.hud(); if (typeof Juice !== 'undefined') Juice.miss(was); },
 
   boot() {
     this.state = loadState(); migrate3d(this.state); saveState();
@@ -142,6 +144,7 @@ const Game = {
     $('#casinoBtn').onclick = () => { SFX.click(); this.casino(); };
     $('#soundBtn').onclick = () => { this.state.sound = !this.state.sound; saveState(); this.hud(); SFX.click(); };
     this.hud(); this.map();
+    if (typeof Juice !== 'undefined') Juice.boot();
   },
 
   map() {
@@ -233,7 +236,7 @@ const Game = {
       const api = {
         run,
         right: (xp = 10, anchor) => { run.xp += this.award(xp, anchor); SFX.good(); },
-        wrong: (target) => { run.mistakes++; this.miss(); SFX.bad(); if (target) { target.classList.remove('shake'); void target.offsetWidth; target.classList.add('shake'); } },
+        wrong: (target) => { run.mistakes++; this.miss(); SFX.bad(); if (target) { target.classList.remove('shake'); void target.offsetWidth; target.classList.add('shake'); } if (typeof Juice !== 'undefined') Juice.wrong(target); },
         next: () => go(i + 1),
         end: () => go(def.steps.length),
         // Shows the purple-pen explanation and a Next button.
@@ -263,7 +266,7 @@ const Game = {
     body.append(h('section', { class: 'step result' },
       h('div', { class: 'celebrate' }, h('div', { class: 'bubble' }, say), h('div', { class: 'cel-av', onmount: el => { const v = liveAvatar(el, s.avatar, s.equip, { h: 220, auto: 0.8 }); if (v && !lost) v.cheer = 1; } })),
       h('h2', {}, lost ? 'Game over' : 'Station cleared!'),
-      h('div', { class: 'bigstars', html: starHTML(stars) }),
+      h('div', { class: 'bigstars', html: starHTML(stars), onmount: el => typeof Juice !== 'undefined' && Juice.stars(el, stars) }),
       h('p', {}, lines), h('p', { class: 'mono' }, `+${run.xp} XP this run. You have ${s.wallet} XP to spend.`),
       h('div', { class: 'row', style: 'justify-content:center' },
         h('button', { class: 'btn', onclick: () => this.play(index) }, 'Replay'),
