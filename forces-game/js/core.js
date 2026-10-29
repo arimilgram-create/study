@@ -117,7 +117,7 @@ const Game = {
     $('#rank').textContent = rankFor(s.xp);
     $('#streak').textContent = this.streak >= 3 ? `${this.streak} (x${this.mult()})` : this.streak;
     $('#streakBox').classList.toggle('hot', this.streak >= 3);
-    $('#soundBtn').textContent = 'Sound: ' + (s.sound ? 'on' : 'off');
+    $('#soundBtn').textContent = s.sound ? '♪ On' : '♪ Off';
     $('#soundBtn').setAttribute('aria-pressed', s.sound);
     $('#meAvatar').innerHTML = avatarHTML(s.avatar, s.equip, 'head');
     $('#meName').textContent = s.avatar.name;
