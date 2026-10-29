@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Inertia Quest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -689,7 +690,7 @@ body.in-hangout{overflow:hidden}
 .hg-quiz .modal h2{text-align:center}
 .play-btn{background:linear-gradient(var(--green1),var(--green2));color:#fff;text-shadow:var(--ol-sm),0 2px 0 #15171c;font-size:1.05rem;width:100%}
 @media (pointer:coarse){ .hg-btns{display:flex} .hg-tip{display:none} .hg-chat{bottom:124px;left:12px} }
-@media (max-width:720px){ .hg-board{display:none} .hg-side{top:auto;bottom:130px;transform:none} .hg-sbtn{width:54px;height:54px} .hg-cash b{font-size:1.3rem} .hg-chat{width:calc(100vw - 24px)} }
+@media (max-width:720px){ .hg-board{display:none} .hg-side{top:calc(env(safe-area-inset-top,0px) + 66px);bottom:auto;transform:none;gap:8px} .hg-sbtn{width:52px;height:52px;font-size:.62rem} .hg-sbtn .hg-sico{font-size:1.2rem} .hg-cash b{font-size:1.3rem} .hg-chat{width:calc(100vw - 24px);max-height:26vh;overflow:hidden;justify-content:flex-end} .lvl-head h2{min-width:9ch} }
 /* 3D casino */
 .cz-view{position:relative;width:100%;border:3px solid #15171c;border-radius:var(--r);overflow:hidden;box-shadow:0 6px 0 #15171c;background:radial-gradient(circle at 50% 30%,#2a3560,#0d1224 75%)}
 .cz-view .v3d{display:block}

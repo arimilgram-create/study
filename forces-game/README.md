@@ -117,33 +117,43 @@ v = Δx / t for each part, then the total).
 
 Miss a question twice and the game shows you the right answer, with the worked explanation.
 
-**Loot and perks (v2):** cases now drop an item plus sometimes a bonus bag of chips. An epic or better
-is guaranteed every 15 cases without one (the pity meter). Items you wear give small perks: hats and
-titles add XP from studying, outfits and sidekicks add chips from bonus bags and trade-ins. Shiny
-versions double the perk. Opening shows the case shake, the lid, the reel, and a reveal that gets bigger
-for rarer drops. x5 and x10 open as a card grid.
+## 3D (v5)
 
-**Casino (v2):** Plinko has 8, 12 or 16 rows and low, medium or high risk, with the expected return
-shown (96% on every setting). Mines has 1 to 20 mines. Coin Ladder doubles down on each correct call.
-Chips convert to spendable XP at 1 chip = 1 XP (rank still comes from studying).
+The game uses [three.js](https://threejs.org) r149 (MIT), bundled in `vendor/three.min.js` so it works offline.
+Everything 3D falls back to the 2D versions when WebGL isn't available.
 
-**Vector art (v3):** `js/art.js` holds 524 vector items from [OpenMoji](https://openmoji.org), licensed
-CC BY-SA 4.0. They include 40 outfits, 7 hats, 126 animal sidekicks, and 351 charms. Hats, outfits, and
-sidekicks appear on your character. Every item shows its vector in the locker, shop, and drop cards.
-The art is generated from the OpenMoji color SVG set, so don't edit it by hand.
+| File | What it does |
+|---|---|
+| `js/k3.js` | Shared 3D helpers: live views with drag-to-spin, snapshot thumbnails, particles, text labels, tweens, and an SVG path parser that extrudes game-icons vectors |
+| `js/avatar3d.js` | The blocky Roblox-style character: drawn face, nine hair styles, shirts and pants painted onto the body so they fit, and attachment points for hats, face accessories, back items, gear in the hand, pets, and auras |
+| `js/items3d.js` | The 3D item catalog (130 items), the one-time trade-in of the old 2D items, 3D item thumbnails, and avatar portraits |
+| `js/character.js` | The locker: a Roblox-style avatar editor with a live 3D preview, category tabs, owned-first grid, search, sort, details card, and a Body tab |
+| `js/cases3d.js` | 3D case opening: tap the crate three times, the glow climbs toward the rarity you pulled, the lid blasts off, and the item rises out in a beam of light |
+| `js/juice.js` | Feel: XP coins fly into the top bar, streak toasts, star pop-ins, a rank-up popup, richer sounds, and phone buzzes |
+| `js/hangout.js` | The 3D hangout (Newton Plaza) with a Roblox-style GUI: WASD/joystick, jump, sprint, camera, proximity prompts, portals, chat, and leaderboard |
+| `js/brainrot.js` | The Steal-a-Brainrot style pet game inside the hangout |
+| `js/casino3d.js` | 3D Plinko, Mines, Rocket Crash, and Coin Ladder with the same odds and payouts as the 2D games |
 
-**Gear and back items (v4):** `js/art2.js` holds 196 vectors from [game-icons.net](https://game-icons.net)
-by Lorc, Delapouite and contributors, licensed CC BY 3.0: 178 **Gear** items held in the character's
-hand (swords, wands, tridents, shields, tools, instruments) and 18 **Back** items (wings, capes, jetpacks).
-They are drawn in their rarity color with a thick outline, drop from every case, and are cosmetic only
-(no perk). The file is generated, so don't edit it by hand.
+**Items:** hats, face accessories, shirts, pants, back items, gear, pets, and auras, plus the kept titles,
+confetti, and arrow skins. The old 2D clothes, pets, backgrounds, and OpenMoji charms were removed; anything
+a player owned was traded in once for chips at the normal trade-in value. Gear also includes 178 vectors from
+[game-icons.net](https://game-icons.net) (Lorc, Delapouite and contributors, CC BY 3.0) in `js/art2.js`,
+extruded in 3D when held. Hats, face items, and titles add XP from studying; shirts, pants, and pets add
+chips from bonus bags and trade-ins. Shiny versions double the perk and sparkle.
 
-**Cheaper cases (v3):** Pocket Case (40 XP or 30 chips) and Lab Case (90 XP or 50 chips). Both still
-return less than they cost, even with the perk bonus maxed.
+**Brainrot game:** twelve original brainrots walk down the red carpet. Buy one and it walks to your base,
+where it earns cash on a pad; walk onto the green Collect plate to collect it (earnings continue at half rate
+for up to 30 minutes while you're away). Hold E on a rival's pad to steal a brainrot, then sprint home before
+the owner catches you. Rivals come to steal yours: tag them to stop them, or lock your base with lasers for
+40 seconds. The Study Terminal gives 2x cash for 60 seconds for a correct physics answer. Every brainrot you
+own unlocks as a pet in the locker (brainrot pets aren't in cases and can't be sold for chips).
 
-**Cases, casino and character:** XP you earn (or casino chips) buys cases in the Case Shop (Rest, Velocity,
-Momentum and Newton) holding 67 cosmetics across 5 rarities, with shiny variants. Open 1 or 5 at a time.
-Trade items in for chips at the Casino and play Gravity Plinko, Rocket Crash or Coin Flip (play chips only). Build your character in the Character screen and equip items
-from your locker. Rank is based on total XP earned, so spending never lowers it.
+**Cases:** an epic or better is guaranteed every 15 cases without one (the pity meter). Shiny drops are worth
+4x chips. Every case returns less than it costs, even with the perk bonus maxed. Pocket Case (40 XP or 30
+chips) and Lab Case (90 XP or 50 chips) are the cheap ones.
+
+**Casino:** play money only. Plinko has 8, 12 or 16 rows and low, medium or high risk (96% expected return
+on every setting). Mines has 1 to 20 mines (97%). Rocket Crash and Coin Ladder are 97%. Chips convert to
+spendable XP at 1 chip = 1 XP. Rank comes only from studying, so the casino can't raise it.
 
 Open `index.html` in a browser to play. Progress (XP, stars) is saved in the browser.
